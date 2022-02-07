@@ -4,6 +4,12 @@ from flask_login import UserMixin # allow to set variable is_active=True and to 
 import logging as lg
 from werkzeug.security import generate_password_hash
 import csv
+from sqlalchemy import text
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+metadata = Base.metadata
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -15,40 +21,58 @@ def load_user(user_id):
     Returns:
         instance of users depending of his id
     """
-    return Users.query.get(int(user_id))
+    return User.query.get(int(user_id))
 
-class Users(db.Model,UserMixin):
-    """Create a table Users on the candidature database
+# coding: utf-8
+class Location(db.Model):
+    __tablename__ = 'location'
 
-    Args:
-        db.Model: Generates columns for the table
-        UserMixin: Generates an easy way to provide a current_user
+    id = db.Column(db.Integer, primary_key=True)
+    region = db.Column(db.String(255), nullable=False)
 
-    """
-    id = db.Column(db.Integer(), primary_key=True, nullable=False, unique=True)
-    last_name = db.Column(db.String(length=30), nullable=False)
-    first_name = db.Column(db.String(length=30), nullable=False)
-    email_address = db.Column(db.String(length=50), nullable=False, unique=True)
-    password_hash = db.Column(db.String(length=200), nullable=False)
-    telephone_number = db.Column(db.String(length=10), nullable=True)
-    is_admin = db.Column(db.Boolean(), nullable=False, default=False)
+    @classmethod
+    def find_by_id(cls, location_id):
+        return cls.query.filter_by(id=location_id).first()
 
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
+class User(db.Model,UserMixin):
+    __tablename__ = 'user'
+
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    email = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    create_time = db.Column(db.String(), default=datetime.date.today())
+    first_name = db.Column(db.String(45), nullable=False)
+    last_name = db.Column(db.String(45), nullable=False)
+    phone_number = db.Column(db.Integer, nullable=True)
+    is_admin =db. Column(db.Integer, nullable=False, server_default=text("'0'"))
+    promotion = db.Column(db.String(45), nullable=True)
+    
     def __repr__(self):
         return f'{self.last_name} {self.first_name}'
 
     def json(self):
         return {
-            'last_name': self.last_name, 
-            'first_name': self.first_name,
-            'email_address': self.email_address,
-            'telephone_number': self.telephone_number,
-            'is_admin': self.is_admin
+            'id' : self.id,
+            'email' :self.email,
+            'password' : self.password,
+            'create_time' : self.create_time,
+            'first_name' : self.first_name,
+            'last_name' :self.last_name,
+            'phone_number': self.phone_number,
+            'is_admin' : self.is_admin,
+            'promotion' : self.promotion
             }
 
     @classmethod
-    def find_by_title(cls, user_id):
-        return cls.query.filter_by(user_id=user_id).first()
-
+    def find_by_id(cls, user_id):
+        return cls.query.filter_by(id=user_id).first()
 
     def save_to_db(self):
         db.session.add(self)
@@ -57,53 +81,50 @@ class Users(db.Model,UserMixin):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+        
+class Company(db.Model):
+    __tablename__ = 'company'
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    sector = db.Column(db.Integer, nullable=False, server_default=text("'0'"))
+    type = db.Column(db.Integer, nullable=False)
+    location_id = db.Column(db.ForeignKey('location.id', ondelete='CASCADE'), nullable=False, index=True)
+
+    location = relationship('Location')
+    
+    @classmethod
+    def find_by_id(cls, company_id):
+        return cls.query.filter_by(id=company_id).first()
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
 class Candidacy(db.Model):
-    """Create a table Candidacy on the candidature database
+    __tablename__ = 'candidacy'
 
-    Args:
-        db.Model: Generates columns for the table
-
-    """
-
-    id = db.Column(db.Integer(), primary_key=True, nullable=False, unique=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'),nullable=False)
-    entreprise = db.Column(db.String(), nullable=False)
-    contact_full_name = db.Column(db.String(length=50), nullable=False)
-    contact_email = db.Column(db.String(length=50), nullable=True)
-    contact_mobilephone = db.Column(db.String(length=50), nullable=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    user_id = db.Column(db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False, index=True)
+    company_id = db.Column(db.ForeignKey('company.id'), nullable=False, index=True)
+    contact_full_name = db.Column(db.String(50), nullable=False)
+    contact_email = db.Column(db.String(100), nullable=True)
     date = db.Column(db.String(), default=datetime.date.today())
-    status = db.Column(db.String(), nullable=True, default="En cours")
+    contact_phone = db.Column(db.Integer, nullable=True)
+    status = db.Column(db.Integer, server_default=text("'0'"))
+    job_title = db.Column(db.Integer, nullable=False, server_default=text("'0'"))
+    contact_link = db.Column(db.String(255), nullable=True)
+    location_id = db.Column(db.Integer, nullable=False)
 
-    def __repr__(self):
-        return f' Candidat id : {self.user_id}'
-
-    def json(self):
-        return {
-            'id': self.id, 
-            'user_id': self.user_id, 
-            'entreprise': self.entreprise,
-            'contact_full_name': self.contact_full_name,
-            'contact_email': self.contact_email,
-            'contact_mobilephone': self.contact_mobilephone,
-            'date': self.date,
-            'status': self.status
-            }
-
-
+    company = relationship('Company')
+    user = relationship('User')
+    
     @classmethod
-    def find_by_user_id(cls, user_id):
-        candidacy_list=[]
-        for candidacy in cls.query.filter_by(user_id=user_id).all():
-            candidacy_list.append(candidacy.json())
-        return candidacy_list
-
-    @classmethod
-    def get_all_in_list_with_user_name(cls):
-        candidacy_list=[]
-        for candidacy in cls.query.join(Users).with_entities(Users.first_name,cls.entreprise, cls.contact_full_name, cls.contact_email, cls.contact_mobilephone,cls.date,cls.status).all():
-            candidacy_list.append(candidacy)
-        return candidacy_list
+    def find_by_id(cls, candidacy_id):
+        return cls.query.filter_by(id=candidacy_id).first()
 
     def save_to_db(self):
         db.session.add(self)
@@ -112,32 +133,14 @@ class Candidacy(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
-
+        
 # Function to create db and populate it
+    
 def init_db():
     db.drop_all()
     db.create_all()
     #db.session.add( )
-    Users(last_name="ben", first_name= "charles", email_address= "cb@gmail.com", password_hash= generate_password_hash("1234", method='sha256'), is_admin=True).save_to_db() 
-    Users(last_name="beniac", first_name= "cha", email_address= "bb@gmail.com", password_hash= generate_password_hash("1234", method='sha256'), is_admin=False).save_to_db()
-    Candidacy(user_id = 1, entreprise = "facebook", contact_full_name = "mz", contact_email="mz@facebook.fb").save_to_db()
-    Candidacy(user_id = 1, entreprise = "google", contact_full_name = "lp", contact_email="lp@gmail.com").save_to_db()
+    User(email= "cb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="ben", first_name= "charles", is_admin=True).save_to_db() 
+    User(email= "bb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="beniac", first_name= "cha", is_admin=False, promotion='Dev IA').save_to_db()
 
-    
-    # Insert all users from  "static/liste_apprenants.csv"
-    with open("App/static/liste_apprenants.csv", newline='') as f:
-        reader = csv.reader(f)
-        data = list(reader)
 
-   
-    for i in data:
-        user = {
-                'email_address' : i[0],
-                'first_name' : i[1],
-                'last_name' : i[2],
-                'password_hash' : generate_password_hash(i[3], method='sha256'),
-                'is_admin' : True if i[4] == "TRUE" else False
-            }
-        Users(**user).save_to_db()
-    
-    lg.warning('Database initialized!')

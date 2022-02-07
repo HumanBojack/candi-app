@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
 from App import db, app
 from datetime import date
-from .models import Users, Candidacy
+from .models import User, Candidacy
 from .forms import Login, AddCandidacy, ModifyCandidacy, ModifyProfile
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -25,8 +25,8 @@ def login_page():
     """
     form = Login()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email_address=form.email.data).first()
-        if user and check_password_hash(user.password_hash, form.password.data):
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             flash(f"Vous êtes connecté en tant que : {user.first_name} {user.last_name}",category="success")
             return redirect(url_for('board_page'))
@@ -52,7 +52,7 @@ def board_page():
     if (current_user.is_admin == True):  
         return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy=Candidacy.get_all_in_list_with_user_name())
     else:
-        return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs ,user_candidacy=Candidacy.find_by_user_id(current_user.id))
+        return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_id(current_user.id))
 
 
 @app.route('/logout')
