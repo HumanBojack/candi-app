@@ -1,10 +1,15 @@
 from flask import render_template, redirect, url_for, flash, request
-from App import db, app
+from App import db, app, mail, api
 from datetime import date
 from .models import User, Candidacy
-from .forms import Login, AddCandidacy, ModifyCandidacy, ModifyProfile
+from .forms import Login, AddCandidacy, ModifyCandidacy, ModifyProfile, RecoverModifyPw, RecoverPw
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_mail import Message
+from flask_jwt import JWT
+from security import authenticate, identity
+
+jwt = JWT(app, authenticate, identity)
 
 @app.route('/')
 @app.route('/home')
@@ -34,9 +39,29 @@ def login_page():
             flash('Adresse email ou mot de passe invalide',category="danger")
     return render_template('login.html',form=form)
 
+@app.route('/forgotten_pw', methods=['GET','POST'])
+def forgotten_pw():
+    form = RecoverPw()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_mail('Recover password', f'recovery link : http://127.0.0.1:5000/recover_pw/{user.id}', form.email.data)
+            return redirect(url_for('login_page'))
+        
+    return render_template('recover_password.html',form=form)
 
-
-
+@app.route('/recover_pw/<int:user_id>', methods=['GET','POST'])
+def recover_pw(user_id):
+    form = RecoverModifyPw()
+    if form.validate_on_submit():
+        if form.password.data == form.verify_password.data:
+            user = User.query.filter_by(id=user_id).first()
+            user.password = generate_password_hash(form.password.data, method='sha256')
+            user.save_to_db()
+            return redirect(url_for('login_page'))
+    return render_template('recover_modify_password.html',form=form)
+            
+            
 @app.route('/board', methods=['GET','POST'])
 @login_required
 def board_page():
@@ -55,6 +80,7 @@ def board_page():
 
 
 @app.route('/logout')
+@login_required
 def logout_page():
     """[Allows to disconnect the user and redirect to the home page]
     """
@@ -63,6 +89,7 @@ def logout_page():
     return redirect(url_for('home_page'))
 
 @app.route('/candidature', methods= ['GET', 'POST'])
+@login_required
 def add_candidature():
     """[Allow to generate the template of add_candidacy.html on candidacy path to add candidacy in the BDD if validate and redirect to the board page when finish]
 
@@ -125,6 +152,7 @@ def modify_candidacy():
     return render_template('modify_candidacy.html', form=form , candidacy=candidacy.json())
     
 @app.route('/delete_candidacy')
+@login_required
 def delete_candidacy():
     """[Allow to delete candidacy in the BDD with the id and redirect to board page]"""
 
@@ -132,3 +160,8 @@ def delete_candidacy():
     Candidacy.query.filter_by(id=candidacy_id).first().delete_from_db()
     flash("Candidature supprimé avec succés",category="success")
     return redirect(url_for('board_page'))
+
+def send_mail(title, body, email):
+    msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
+    msg.body = f'{body}'
+    mail.send(msg)

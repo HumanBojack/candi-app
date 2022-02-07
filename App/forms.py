@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField,EmailField,SubmitField,StringField
 from wtforms.validators import Length,DataRequired,Email,EqualTo,ValidationError
-from .models import User
 
 class Login(FlaskForm):
     """[Form to login]
@@ -9,7 +8,6 @@ class Login(FlaskForm):
     email = EmailField(label="Adresse mail:", validators = [DataRequired()])
     password = PasswordField(label="Mot de passe:", validators = [DataRequired()])
     submit = SubmitField(label="Se connecter")
-
 
 class AddCandidacy(FlaskForm):
     """[Form to add candidacy]
@@ -37,3 +35,15 @@ class ModifyCandidacy(FlaskForm):
     status = StringField(label='Status', validators=[DataRequired()])
 
     submit = SubmitField(label="Valider")
+    
+class RecoverPw(FlaskForm):
+    """[Form to login]
+    """
+    email = EmailField(label="Adresse mail:", validators = [DataRequired()])
+    submit = SubmitField(label='Valider')
+class RecoverModifyPw(FlaskForm):
+    """[Form to login]
+    """
+    password = PasswordField(label="Password:", validators = [DataRequired()])
+    verify_password = PasswordField(label="Verify password:", validators = [DataRequired()])
+    submit = SubmitField(label='Valider')
