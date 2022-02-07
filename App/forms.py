@@ -8,7 +8,7 @@ class Login(FlaskForm):
     """
     email = EmailField(label="Adresse mail:", validators = [DataRequired()])
     password = PasswordField(label="Mot de passe:", validators = [DataRequired()])
-    submit = SubmitField(label="Se connecter")
+    submit = SubmitField(label="Connexion")
 
 
 class AddCandidacy(FlaskForm):

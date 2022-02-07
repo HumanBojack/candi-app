@@ -67,12 +67,13 @@ h1{
   
   @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
   body{
-    background: -webkit-linear-gradient(left, #25c481, #25b7c4);
-    background: linear-gradient(to right, #25c481, #25b7c4);
     font-family: 'Roboto', sans-serif;
+    background-color:rgba(206, 0, 51, 1);
   }
   label{
     color:#fff;
+    display: flex;
+    align-content: center;
   }
   section{
     margin:50px;
@@ -80,5 +81,6 @@ h1{
   a, a:hover{
     color: #fff;  
   }
+
   
   
