@@ -123,6 +123,19 @@ class Candidacy(db.Model):
     user = relationship('User')
     
     @classmethod
+    def find_by_user_id(cls, user_id):
+        candidacy_list=[]
+        for candidacy in cls.query.filter_by(user_id=user_id).all():
+            candidacy_list.append(candidacy.json())
+        return candidacy_list
+    
+    def get_all_in_list_with_user_name(cls):
+        candidacy_list=[]
+        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, cls.email, cls.contact_phone, cls.date, cls.status).all():
+            candidacy_list.append(candidacy)
+        return candidacy_list
+    
+    @classmethod
     def find_by_id(cls, candidacy_id):
         return cls.query.filter_by(id=candidacy_id).first()
 
@@ -133,7 +146,7 @@ class Candidacy(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
-        
+ 
 # Function to create db and populate it
     
 def init_db():
