@@ -6,24 +6,31 @@
 <div class='container mt-5'>
     <h1>Nouvelle Candidature</h1>
     <form method="POST" class="form-register">
+
         {{ form.hidden_tag() }}
 
-        {{ form.entreprise.label }}
-        {{ form.entreprise(size=32, class="form-control") }}
-        <br>
+        {{ form.company_id.label }}
+        {{ form.company_id(size=32, class="form-control") }}
+        <br/>
 
         {{ form.contact_full_name.label }}
         {{ form.contact_full_name(size=32, class="form-control") }}
-        <br>
+        <br/>
 
         {{ form.contact_email.label }}
         {{ form.contact_email(size=32, class="form-control") }}
-        <br>
+        <br/>
 
-        {{ form.contact_mobilephone.label }}
-        {{ form.contact_mobilephone(size=32, class="form-control") }}
-        <br>  
+        {{ form.contact_phone.label }}
+        {{ form.contact_phone(size=32, class="form-control") }}
+        <br/> 
 
+        {{ form.job_title.label }}
+        {{ form.job_title(class="form-control") }}
+        <br/>
+
+        {{ form.contact_link.label }}
+        {{ form.contact_link(size=32, class="form-control") }}
 
         {{ form.submit(class="btn btn-lg btn-primary mt-4 d-block",id="button") }}
     </form>

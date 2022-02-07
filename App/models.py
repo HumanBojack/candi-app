@@ -128,6 +128,7 @@ class Candidacy(db.Model):
             candidacy_list.append(candidacy.json())
         return candidacy_list
     
+    @classmethod
     def get_all_in_list_with_user_name(cls):
         candidacy_list=[]
         for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, cls.email, cls.contact_phone, cls.date, cls.status).all():
@@ -137,6 +138,20 @@ class Candidacy(db.Model):
     @classmethod
     def find_by_id(cls, candidacy_id):
         return cls.query.filter_by(id=candidacy_id).first()
+
+    def json(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "company_id": self.company_id,
+            "contact_full_name": self.contact_full_name,
+            "contact_email": self.contact_email,
+            "date": self.date,
+            "contact_phone": self.contact_phone,
+            "status": self.status,
+            "job_title": self.job_title,
+            "contact_link": self.contact_link
+        }
 
     def save_to_db(self):
         db.session.add(self)
@@ -194,8 +209,8 @@ def seed_db():
                 'first_name' : i[1],
                 'last_name' : i[2],
                 'password' : generate_password_hash(i[3], method='sha256'),
-                'is_admin' : True if i[4] == "TRUE" else False,
-                'create_time': 00
+                'is_admin' : True if i[4] == "TRUE" else False
+                #'create_time': 00
             }
         User(**user).save_to_db()
 
