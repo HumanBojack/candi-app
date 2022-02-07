@@ -51,7 +51,7 @@ class User(db.Model,UserMixin):
     first_name = db.Column(db.String(45), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
     phone_number = db.Column(db.Integer, nullable=True)
-    is_admin =db. Column(db.Integer, nullable=False, server_default=text("'0'"))
+    is_admin =db. Column(db.Integer, nullable=False, default=0)
     promotion = db.Column(db.String(45), nullable=True)
     
     def __repr__(self):
@@ -87,7 +87,7 @@ class Company(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    sector = db.Column(db.Integer, nullable=False, server_default=text("'0'"))
+    sector = db.Column(db.Integer, nullable=False, default=0)
     type = db.Column(db.Integer, nullable=False)
     location_id = db.Column(db.ForeignKey('location.id', ondelete='CASCADE'), nullable=False, index=True)
 
@@ -114,8 +114,8 @@ class Candidacy(db.Model):
     contact_email = db.Column(db.String(100), nullable=True)
     date = db.Column(db.String(), default=datetime.date.today())
     contact_phone = db.Column(db.Integer, nullable=True)
-    status = db.Column(db.Integer, server_default=text("'0'"))
-    job_title = db.Column(db.Integer, nullable=False, server_default=text("'0'"))
+    status = db.Column(db.Integer, default=0)
+    job_title = db.Column(db.Integer, nullable=False, default=0)
     contact_link = db.Column(db.String(255), nullable=True)
 
     company = relationship('Company')
