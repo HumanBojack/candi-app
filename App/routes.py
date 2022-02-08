@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import render_template, redirect, url_for, flash, request
 from .models import User, Candidacy, Company
 from flask_restful import abort
@@ -9,6 +10,19 @@ from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from random import *
 import string
+
+def admin_required(func):
+    """
+    Modified login_required decorator to restrict access to admin group.
+    """
+
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.is_admin != 1:     
+            flash("You don't have permission to access this resource.", "warning")
+            return redirect(url_for("home_page"))
+        return func(*args, **kwargs)
+    return decorated_view
 
 def send_mail(title, body, email):
     msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
@@ -109,7 +123,7 @@ def board_page():
     # This need to be done another way => Romain
     if (current_user.is_admin == True): 
         admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
-        return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy=Candidacy.get_all_in_list_with_user_name())
+        return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy = Candidacy.get_all_in_list_with_user_name())
     else:
         # return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_user_id(current_user.id))
         usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
@@ -224,6 +238,7 @@ def delete_candidacy():
 
 @app.route('/account_generation', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def account_generation():
     form = AccountGeneration()
     if form.validate_on_submit():
