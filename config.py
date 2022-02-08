@@ -7,6 +7,7 @@ else:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 SECRET_KEY = 'VerySecret'
+SECURITY_PASSWORD_SALT = 'MyVerySecretTwo'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

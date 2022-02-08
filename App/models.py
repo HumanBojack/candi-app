@@ -7,6 +7,7 @@ import csv
 from sqlalchemy.orm import relationship
 
 
+
 @login_manager.user_loader
 def load_user(user_id):
     """Allow to create a current_user with his id
