@@ -12,7 +12,11 @@
             {{ form.hidden_tag() }}
 
             {{ form.company_id.label }}
-            {{ form.company_id(size=32, class="form-control") }}
+            {{ form.company_id(class="form-control") }}
+            <br/>
+
+            {{ form.location_id.label }}
+            {{ form.location_id(class="form-control") }}
             <br/>
 
             {{ form.contact_full_name.label }}
