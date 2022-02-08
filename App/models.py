@@ -1,12 +1,11 @@
 from App import db, login_manager
+from App.static import constant
 import datetime 
 from flask_login import UserMixin # allow to set variable is_active=True and to stay connected
 import logging as lg
 from werkzeug.security import generate_password_hash
 import csv
 from sqlalchemy.orm import relationship
-
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -136,6 +135,7 @@ class Candidacy(db.Model):
             candidacy_js["user"] = f"{candidacy.user.first_name} {candidacy.user.last_name}"
             candidacy_js["company"] = candidacy.company.name
             candidacy_js["location"] = candidacy.location.region
+            candidacy_js["status_interpreted"] = constant.STATUS[int(candidacy.status)][1]
             candidacies.append(candidacy_js)
         return candidacies
     
