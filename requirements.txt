@@ -16,3 +16,6 @@ uWSGI==2.0.20
 Werkzeug==1.0.1
 WTForms==3.0.1
 email_validator
+python-dotenv
+flask-mail
+flask_restful
