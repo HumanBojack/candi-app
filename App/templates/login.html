@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class='container mt-5'>
-        <h1> Log in </h1>
-        <br>
+    <div class="container text-center">
+        <div class='container mt-5'>
         <form method="POST" class="form-register">
             {{ form.hidden_tag() }}
             
@@ -19,5 +18,6 @@
             <br>
             {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
         </form>
-    </div>  
+    </div>
+</div>
 {% endblock %}
