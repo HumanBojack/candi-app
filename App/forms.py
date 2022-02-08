@@ -47,3 +47,23 @@ class RecoverModifyPw(FlaskForm):
     password = PasswordField(label="Password:", validators = [DataRequired()])
     verify_password = PasswordField(label="Verify password:", validators = [DataRequired()])
     submit = SubmitField(label='Valider')
+    
+class AccountGeneration(FlaskForm):
+    """[Form to login]
+    """
+    promotion = StringField(label="Promotion:", validators=[DataRequired()])
+    email = EmailField(label="Adresse mail:", validators = [DataRequired()])
+    submit = SubmitField(label='Valider')
+    
+class AccountCreation(FlaskForm):
+    """[Form to login]
+    """
+    
+    first_name = StringField(label="First name:", validators=[DataRequired()])
+    last_name = StringField(label="Last name:", validators = [DataRequired()])
+    phone = StringField(label="Phone number (Optionnal):")
+    password = PasswordField(label="Password:", validators = [DataRequired()])
+    verify_password = PasswordField(label="Verify password:", validators = [DataRequired()])
+    
+    
+    submit = SubmitField(label='Valider')

@@ -33,7 +33,12 @@
         {% if current_user.is_authenticated %}
         <li class="nav-item ml-3">
           <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
-        </li>
+        </li> 
+          {% if current_user.is_admin %}       
+          <li class="nav-item ml-3">
+            <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
+          </li>
+          {% endif %}
         {% else %}
         <li class="nav-item ml-3">
           <a class="nav-link" href="{{ url_for('login_page') }}">Board</a>

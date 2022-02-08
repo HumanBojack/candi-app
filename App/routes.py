@@ -1,29 +1,36 @@
-from flask import render_template, redirect, session, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request
+from flask_restful import abort
 from App import db, app, mail
 from .models import User, Candidacy
-from .forms import Login, AddCandidacy, ModifyCandidacy, ModifyProfile, RecoverModifyPw, RecoverPw
+from .forms import AccountCreation, AccountGeneration, Login, AddCandidacy, ModifyCandidacy, ModifyProfile, RecoverModifyPw, RecoverPw
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from App import app
+from random import *
+import string
 
-def generate_confirmation_token(email):
+def send_mail(title, body, email):
+    msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
+    msg.body = f'{body}'
+    mail.send(msg)
+
+def generate_confirmation_token(data):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+    return serializer.dumps(data, salt=app.config['SECURITY_PASSWORD_SALT'])
 
-
-def confirm_token(token, expiration=3600):
+def confirm_token(token, expiration):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
-        email = serializer.loads(
+        data = serializer.loads(
             token,
             salt=app.config['SECURITY_PASSWORD_SALT'],
             max_age=expiration
         )
     except:
         return False
-    return email
+    return data
 
 @app.route('/')
 @app.route('/home')
@@ -59,23 +66,36 @@ def forgotten_pw():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            send_mail('Recover password', f'recovery link : http://127.0.0.1:5000/recover_pw/{user.id}', form.email.data)
-            return redirect(url_for('login_page'))
+            token = generate_confirmation_token(user.email)
+            
+            subject = "Password reset requested"
+            
+            recover_url = url_for(
+                'recover_pw',
+                token=token,
+                _external=True)
+            
+            send_mail(subject, recover_url, user.email)
+            return redirect(url_for('home_page'))
         
     return render_template('recover_password.html',form=form)
 
-@app.route('/recover_pw/<int:user_id>', methods=['GET','POST'])
-def recover_pw(user_id):
+@app.route('/recover_pw/<token>', methods=['GET', 'POST'])
+def recover_pw(token):
+    try:
+        email = confirm_token(token, expiration=3600)
+    except:
+        abort(404)
     form = RecoverModifyPw()
     if form.validate_on_submit():
         if form.password.data == form.verify_password.data:
-            user = User.query.filter_by(id=user_id).first()
+            user = User.query.filter_by(email=email).first()
             user.password = generate_password_hash(form.password.data, method='sha256')
             user.save_to_db()
+            flash(f"Vous êtes connecté en tant que : {user.first_name} {user.last_name}",category="success")
             return redirect(url_for('login_page'))
     return render_template('recover_modify_password.html',form=form)
-            
-            
+                
 @app.route('/board', methods=['GET','POST'])
 @login_required
 def board_page():
@@ -84,6 +104,8 @@ def board_page():
     Returns:
         [str]: [board page code different if the user is admin or not]
     """
+    
+    
     admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
     usercandidacy_attributs = ['entreprise','contact_full_name','contact_email', 'date','contact_phone','status']
 
@@ -91,7 +113,6 @@ def board_page():
         return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy=Candidacy.get_all_in_list_with_user_name())
     else:
         return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_user_id(current_user.id))
-
 
 @app.route('/logout')
 @login_required
@@ -175,7 +196,58 @@ def delete_candidacy():
     flash("Candidature supprimé avec succés",category="success")
     return redirect(url_for('board_page'))
 
-def send_mail(title, body, email):
-    msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
-    msg.body = f'{body}'
-    mail.send(msg)
+@app.route('/account_generation', methods=['GET', 'POST'])
+@login_required
+def account_generation():
+    form = AccountGeneration()
+    if form.validate_on_submit():
+        characters = string.ascii_letters + string.punctuation  + string.digits
+        password =  "".join(choice(characters) for x in range(randint(8, 16)))
+        
+        user = User()
+        user.email = form.email.data
+        user.promotion = form.promotion.data
+        user.is_admin = False
+        user.last_name = 'Unknown'
+        user.first_name = 'Unknown'
+        user.password = generate_password_hash(password, method='sha256')
+        jsonuser = user.json()
+        token = generate_confirmation_token(jsonuser)
+                
+        subject = "Account creation request"
+                
+        recover_url = url_for(
+            'account_creation',
+            token=token,
+            _external=True)
+                
+        send_mail(subject, recover_url, user.email)
+        flash('The email have been sent', category= 'success')
+        return redirect(url_for('account_generation'))
+    return render_template('account_generation.html', form=form)
+
+@app.route('/account_creation/<token>', methods=['GET', 'POST'])
+@login_required
+def account_creation(token):
+    try:
+        user = confirm_token(token, expiration=3600)
+    except:
+        abort(404)
+    form = AccountCreation()
+    if form.validate_on_submit():
+        if form.password.data == form.verify_password.data:
+            new_user = User()
+            new_user.email = user['email']
+            new_user.is_admin = user['is_admin']
+            new_user.promotion = user['promotion']
+            new_user.password = generate_password_hash(form.password.data, method='sha256')
+            new_user.first_name = form.first_name.data
+            new_user.last_name = form.last_name.data
+            if form.phone.data:
+                new_user.phone_number = form.phone.data
+            new_user.save_to_db()
+            flash('Account created', category='success')
+            return redirect(url_for('login_page'))
+        else:
+            flash('Failed', category='danger')
+    return render_template('account_creation.html',form=form)

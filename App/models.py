@@ -128,10 +128,10 @@ class Candidacy(db.Model):
         for candidacy in cls.query.filter_by(user_id=user_id).all():
             candidacy_list.append(candidacy.json())
         return candidacy_list
-    
+    @classmethod
     def get_all_in_list_with_user_name(cls):
         candidacy_list=[]
-        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, cls.email, cls.contact_phone, cls.date, cls.status).all():
+        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, User.email, cls.contact_phone, cls.date, cls.status).all():
             candidacy_list.append(candidacy)
         return candidacy_list
     
@@ -189,6 +189,7 @@ def seed_db():
         data = list(reader)
 
     for i in data:
+        print(i)
         user = {
                 'email' : i[0],
                 'first_name' : i[1],

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+    Login
+{% endblock %}
+
+{% block content %}
+    <div class='container mt-5'>
+        <h1> Create a new user account </h1>
+        <br>
+        <form method="POST" class="form-register">
+            {{ form.hidden_tag() }}
+
+            {{ form.promotion.label() }}
+            {{ form.promotion(placeholder="Dev IA, Tech IA, etc..", class="form-control") }}
+
+            {{ form.email.label() }}
+            {{ form.email(placeholder="exemple@exemple.com", class="form-control") }}
+
+            <br>
+            {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
+        </form>
+    </div> 
+    
+{% endblock %}
