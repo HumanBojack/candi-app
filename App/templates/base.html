@@ -33,7 +33,17 @@
         
         <li class="nav-item ml-3">
           <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
+        </li> 
+          {% if current_user.is_admin %}       
+          <li class="nav-item ml-3">
+            <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
+          </li>
+          {% endif %}
+        {% else %}
+        <li class="nav-item ml-3">
+          <a class="nav-link" href="{{ url_for('login_page') }}">Board</a>
         </li>
+        {% endif %}
       </ul>
     </div>
       <div class="col-3 text-right">
@@ -61,10 +71,9 @@
   {% endif %}
   {% endwith %}
 
-  {% block content %}
-  {% endblock %}
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
   integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
   crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -77,3 +86,6 @@
 <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
   </body>
 </html>
+
+{% block content %}
+{% endblock %}

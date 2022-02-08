@@ -15,3 +15,4 @@ urllib3==1.25.9
 uWSGI==2.0.20
 Werkzeug==1.0.1
 WTForms==3.0.1
+email_validator

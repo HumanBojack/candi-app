@@ -1,10 +1,35 @@
 from flask import render_template, redirect, url_for, flash, request
-from App import db, app
-from datetime import date
-from .models import User, Candidacy
-from .forms import Login, AddCandidacy, ModifyCandidacy, ModifyProfile
+from .models import User, Candidacy, Company
+from flask_restful import abort
+from App import app, db, app, mail
+from .forms import AccountCreation, AccountGeneration, Login, AddCandidacy, ModifyCandidacy, ModifyProfile, RecoverModifyPw, RecoverPw
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_mail import Message
+from itsdangerous import URLSafeTimedSerializer
+from random import *
+import string
+
+def send_mail(title, body, email):
+    msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
+    msg.body = f'{body}'
+    mail.send(msg)
+
+def generate_confirmation_token(data):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(data, salt=app.config['SECURITY_PASSWORD_SALT'])
+
+def confirm_token(token, expiration):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    try:
+        data = serializer.loads(
+            token,
+            salt=app.config['SECURITY_PASSWORD_SALT'],
+            max_age=expiration
+        )
+    except:
+        return False
+    return data
 
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
@@ -25,9 +50,42 @@ def login_page():
             flash('Adresse email ou mot de passe invalide',category="danger")
     return render_template('login.html',form=form)
 
+@app.route('/forgotten_pw', methods=['GET','POST'])
+def forgotten_pw():
+    form = RecoverPw()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = generate_confirmation_token(user.email)
+            
+            subject = "Password reset requested"
+            
+            recover_url = url_for(
+                'recover_pw',
+                token=token,
+                _external=True)
+            
+            send_mail(subject, recover_url, user.email)
+            return redirect(url_for('home_page'))
+        
+    return render_template('recover_password.html',form=form)
 
-
-
+@app.route('/recover_pw/<token>', methods=['GET', 'POST'])
+def recover_pw(token):
+    try:
+        email = confirm_token(token, expiration=3600)
+    except:
+        abort(404)
+    form = RecoverModifyPw()
+    if form.validate_on_submit():
+        if form.password.data == form.verify_password.data:
+            user = User.query.filter_by(email=email).first()
+            user.password = generate_password_hash(form.password.data, method='sha256')
+            user.save_to_db()
+            flash(f"Vous êtes connecté en tant que : {user.first_name} {user.last_name}",category="success")
+            return redirect(url_for('login_page'))
+    return render_template('recover_modify_password.html',form=form)
+                
 @app.route('/board', methods=['GET','POST'])
 @login_required
 def board_page():
@@ -36,16 +94,20 @@ def board_page():
     Returns:
         [str]: [board page code different if the user is admin or not]
     """
-    admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
-    usercandidacy_attributs = ['entreprise','contact_full_name','contact_email', 'date','contact_phone','status']
+    # admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
+    # usercandidacy_attributs = ['entreprise','contact_full_name','contact_email', 'date','contact_phone','status']
 
-    if (current_user.is_admin == True):  
+    # This need to be done another way => Romain
+    if (current_user.is_admin == True): 
+        admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
         return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy=Candidacy.get_all_in_list_with_user_name())
     else:
-        return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_user_id(current_user.id))
-
+        # return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_user_id(current_user.id))
+        usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
+        return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy = Candidacy.find_by_user_id(current_user.id))
 
 @app.route('/logout')
+@login_required
 def logout_page():
     """[Allows to disconnect the user and redirect to the home page]
     """
@@ -54,6 +116,7 @@ def logout_page():
     return redirect(url_for('home_page'))
 
 @app.route('/candidature', methods= ['GET', 'POST'])
+@login_required
 def add_candidature():
     """[Allow to generate the template of add_candidacy.html on candidacy path to add candidacy in the BDD if validate and redirect to the board page when finish]
 
@@ -62,7 +125,27 @@ def add_candidature():
     """
     form = AddCandidacy()
     if form.validate_on_submit():
-        Candidacy(user_id = current_user.id, entreprise = form.entreprise.data, contact_full_name = form.contact_full_name.data, contact_email = form.contact_email.data, contact_mobilephone = form.contact_mobilephone.data).save_to_db()
+        if form.radio.data == "1":
+            company = Company(
+                name=form.new_company_name.data,
+                sector=form.new_company_sector.data,
+                type=form.new_company_type.data
+            )
+            company.save_to_db() # should add a try and except on this in order to redirect if there is a problem
+            company_id = company.id
+        else:
+            company_id = form.company_id.data
+
+        Candidacy(
+            user_id=current_user.id,
+            company_id=company_id, #form.company_id.get('data'),
+            location_id=form.location_id.data,
+            contact_full_name=form.contact_full_name.data,
+            contact_email=form.contact_email.data,
+            contact_phone=form.contact_phone.data,
+            job_title=form.job_title.data,
+            contact_link=form.contact_link.data
+        ).save_to_db()
         flash('Nouvelle Candidature ajouté ', category='success')
         return redirect(url_for('board_page'))
     return render_template('add_candidacy.html', form=form)
@@ -88,34 +171,40 @@ def modify_profile():
             flash('Adresse email ou mot de passe invalide',category="danger")
     return render_template('modify_profile.html',form=form)
 
-@app.route('/modify_candidacy', methods=['GET', 'POST'])
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
-def modify_candidacy():
+def modify_candidacy(id):
     """[Allow to generate the template of modify_candidacy.html on modify_candidacy path to modify candidacy in the BDD if validate and redirect to the board page when finish]
 
     Returns:
         [str]: [modify candidacy code page]
     """
-    form = ModifyCandidacy()
-    candidacy_id = request.args.get('id')
-    candidacy = Candidacy.query.filter_by(id = candidacy_id).first()
+    candidacy = Candidacy.query.get_or_404(id)
+    form = ModifyCandidacy(**candidacy.json())
 
     if form.validate_on_submit():
-        
-        if candidacy:
-            candidacy.contact_full_name = form.contact_full_name.data
-            candidacy.contact_email = form.contact_email.data
-            candidacy.contact_mobilephone = form.contact_mobilephone.data
-            candidacy.status = form.status.data
-            db.session.commit()
 
-            flash(f"La candidature a bien été modifié",category="success")
+        candidacy.company_id = form.company_id.data
+        candidacy.contact_full_name = form.contact_full_name.data
+        candidacy.contact_email = form.contact_email.data
+        candidacy.contact_phone = form.contact_phone.data
+        candidacy.job_title = form.job_title.data
+        candidacy.contact_link = form.contact_link.data
+        candidacy.status = form.status.data
+
+        try:
+            candidacy.save_to_db()
             return redirect(url_for('board_page'))
-        else:
+        except:
             flash('Something goes wrong',category="danger")
+
+        
+
+
     return render_template('modify_candidacy.html', form=form , candidacy=candidacy.json())
     
 @app.route('/delete_candidacy')
+@login_required
 def delete_candidacy():
     """[Allow to delete candidacy in the BDD with the id and redirect to board page]"""
 
@@ -123,3 +212,59 @@ def delete_candidacy():
     Candidacy.query.filter_by(id=candidacy_id).first().delete_from_db()
     flash("Candidature supprimé avec succés",category="success")
     return redirect(url_for('board_page'))
+
+@app.route('/account_generation', methods=['GET', 'POST'])
+@login_required
+def account_generation():
+    form = AccountGeneration()
+    if form.validate_on_submit():
+        characters = string.ascii_letters + string.punctuation  + string.digits
+        password =  "".join(choice(characters) for x in range(randint(8, 16)))
+        
+        user = User()
+        user.email = form.email.data
+        user.promotion = form.promotion.data
+        user.is_admin = False
+        user.last_name = 'Unknown'
+        user.first_name = 'Unknown'
+        user.password = generate_password_hash(password, method='sha256')
+        jsonuser = user.json()
+        token = generate_confirmation_token(jsonuser)
+                
+        subject = "Account creation request"
+                
+        recover_url = url_for(
+            'account_creation',
+            token=token,
+            _external=True)
+                
+        send_mail(subject, recover_url, user.email)
+        flash('The email have been sent', category= 'success')
+        return redirect(url_for('account_generation'))
+    return render_template('account_generation.html', form=form)
+
+@app.route('/account_creation/<token>', methods=['GET', 'POST'])
+@login_required
+def account_creation(token):
+    try:
+        user = confirm_token(token, expiration=3600)
+    except:
+        abort(404)
+    form = AccountCreation()
+    if form.validate_on_submit():
+        if form.password.data == form.verify_password.data:
+            new_user = User()
+            new_user.email = user['email']
+            new_user.is_admin = user['is_admin']
+            new_user.promotion = user['promotion']
+            new_user.password = generate_password_hash(form.password.data, method='sha256')
+            new_user.first_name = form.first_name.data
+            new_user.last_name = form.last_name.data
+            if form.phone.data:
+                new_user.phone_number = form.phone.data
+            new_user.save_to_db()
+            flash('Account created', category='success')
+            return redirect(url_for('login_page'))
+        else:
+            flash('Failed', category='danger')
+    return render_template('account_creation.html',form=form)

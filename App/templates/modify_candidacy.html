@@ -11,19 +11,38 @@
         <form method="POST" class="form-register">
             {{ form.hidden_tag() }}
 
-            {{ form.contact_full_name.label() }}
-            {{ form.contact_full_name(value=candidacy.contact_full_name, class="form-control") }}
-            <br>
-            {{ form.contact_email.label() }}
-            {{ form.contact_email(value=candidacy.contact_email, class="form-control") }}
-            <br>
-            {{ form.contact_mobilephone.label() }}
-            {{ form.contact_mobilephone(value=candidacy.contact_mobilephone, class="form-control") }}
-            <br>
-            {{ form.status.label() }}
-            {{ form.status(value=candidacy.status, class="form-control") }}
-            <br>
-            {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
+            {{ form.company_id.label }}
+            {{ form.company_id(class="form-control") }}
+            <br/>
+
+            {{ form.location_id.label }}
+            {{ form.location_id(class="form-control") }}
+            <br/>
+
+            {{ form.contact_full_name.label }}
+            {{ form.contact_full_name(size=32, class="form-control") }}
+            <br/>
+
+            {{ form.contact_email.label }}
+            {{ form.contact_email(size=32, class="form-control") }}
+            <br/>
+
+            {{ form.contact_phone.label }}
+            {{ form.contact_phone(size=32, class="form-control") }}
+            <br/> 
+
+            {{ form.job_title.label }}
+            {{ form.job_title(class="form-control") }}
+            <br/>
+
+            {{ form.contact_link.label }}
+            {{ form.contact_link(size=32, class="form-control") }}
+            <br/>
+
+            {{ form.status.label }}
+            {{ form.status(class="form-control") }}
+
+            {{ form.submit(class="btn btn-lg btn-primary mt-4 d-block",id="button") }}
         </form>
     </div>  
 {% endblock %}
