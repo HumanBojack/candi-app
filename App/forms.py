@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField,EmailField,SubmitField,StringField, SelectField
-from wtforms.validators import Length,DataRequired,Email,EqualTo,ValidationError,URL
-from .models import User
+from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField
+from wtforms.validators import Length,DataRequired,Email,EqualTo,ValidationError,Optional
+from .models import User, Location, Company
 
 class Login(FlaskForm):
     """[Form to login]
@@ -14,20 +14,27 @@ class Login(FlaskForm):
 class AddCandidacy(FlaskForm):
     """[Form to add candidacy]
     """
-    company_id = StringField(label='Entreprise', validators=[DataRequired()]) # a changer
+    # company_id = IntegerField(label='Entreprise', validators=[DataRequired()]) # a changer => SelectField peut être, généré à partir de Company
+    company_choices = [(g.id, g.name) for g in Company.query.all()]
+    company_id = SelectField(label="Entreprise. Tapez son nom si elle n'est pas dans la liste", coerce=int, choices=company_choices)
+
+    location_choices = [(g.id, g.region) for g in Location.query.all()]
+    location_id = SelectField(label="Le lieu de cette entreprise / antenne", coerce=int, choices=location_choices)
+
     contact_full_name = StringField(label='Nom de la personne contactee', validators=[DataRequired()])
     contact_email = EmailField(label='Email de cette derniere') #, validators=[Email(message="Veuillez entrer une adresse email valide")])
-    contact_phone = StringField(label='Son numero de telephone')
+    contact_phone = IntegerField(label='Son numero de telephone', validators=[Optional()])
     job_title = SelectField("Intitule du poste", choices=[(0, "Data Analyst"), (1, "Data Scientist"), (2, "Data Engineer"), (3, "Dev IA"), (4, "Dev Python"), (5, "Autre")])
     contact_link = StringField(label="Lien de l'annonce / du site") #, validators=[URL(message="Veuillez entrer un lien valide")])
+
     submit = SubmitField(label='Ajouter')
 class ModifyCandidacy(FlaskForm): # We should inherit add and modify from a candidacy class
     """[form to modify candidacy]
     """
-    company_id = StringField(label='Entreprise', validators=[DataRequired()]) # a changer
+    company_id = IntegerField(label='Entreprise', validators=[DataRequired()]) # a changer
     contact_full_name = StringField(label='Nom de la personne contactee', validators=[DataRequired()])
     contact_email = EmailField(label='Email de cette derniere') #, validators=[Email(message="Veuillez entrer une adresse email valide")])
-    contact_phone = StringField(label='Son numero de telephone')
+    contact_phone = IntegerField(label='Son numero de telephone', validators=[Optional()])
     job_title = SelectField("Intitule du poste", choices=[(0, "Data Analyst"), (1, "Data Scientist"), (2, "Data Engineer"), (3, "Dev IA"), (4, "Dev Python"), (5, "Autre")])
     contact_link = StringField(label="Lien de l'annonce / du site") #, validators=[URL(message="Veuillez entrer un lien valide")])
     status = SelectField(label="Status de la demande", choices=[(0, "En cours"), (1, "Accepté"), (2, "Refusé")])

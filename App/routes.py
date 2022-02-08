@@ -77,7 +77,8 @@ def add_candidature():
     if form.validate_on_submit():
         Candidacy(
             user_id=current_user.id,
-            company_id=int(form.company_id.data),
+            company_id=form.company_id.data, #form.company_id.get('data'),
+            location_id=form.location_id.data,
             contact_full_name=form.contact_full_name.data,
             contact_email=form.contact_email.data,
             contact_phone=form.contact_phone.data,

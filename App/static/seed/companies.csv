@@ -1,12 +1,12 @@
 name,sector,type,location_id
-Facebook,marketing,big,14
-Apple,marketing,big,14
-Simplon,marketing,startup,7
-CureForCancer,medical,big, 8
-PSA,industrie,big,5
-HP,industrie,big,14
-Ikea,industrie,big,14
-Acer,industrie,big,14
-Samsung,industrie,big,14
-Auchan,marketing,big,7
-AideONoobz,scientifiqe,esn,4
+Facebook,0,2,14
+Apple,0,2,14
+Simplon,0,0,7
+CureForCancer,1,2, 8
+PSA,2,2,5
+HP,2,2,14
+Ikea,2,2,14
+Acer,2,2,14
+Samsung,2,2,14
+Auchan,0,2,7
+AideONoobz,1,1,4
