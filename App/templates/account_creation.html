@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+    Modifier mot de passe
+{% endblock %}
+
+{% block content %}
+    <div class='container mt-5'>
+        <h1 class="text-center"> Modifier mot de passe </h1>
+        <br>
+        <form method="POST" class="form-register">
+            {{ form.hidden_tag() }}
+
+            {{ form.first_name.label() }}
+            {{ form.first_name(placeholder="Jhon", class="form-control") }}
+            <br>
+            {{ form.last_name.label() }}
+            {{ form.last_name(placeholder="Doe", class="form-control") }}
+            <br>
+            {{ form.phone.label() }}
+            {{ form.phone(placeholder="0606060606", class="form-control") }}
+            <br>
+            {{ form.password.label() }}
+            {{ form.password(placeholder="***********", class="form-control") }}
+            <br>
+            {{ form.verify_password.label() }}
+            {{ form.verify_password(placeholder="***********", class="form-control") }}
+            <br>
+            {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
+        </form>
+    </div>  
+{% endblock %}

@@ -1,15 +1,12 @@
-from App import db,login_manager
+from App import db, login_manager
 import datetime 
 from flask_login import UserMixin # allow to set variable is_active=True and to stay connected
 import logging as lg
 from werkzeug.security import generate_password_hash
 import csv
-from sqlalchemy import text
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
-metadata = Base.metadata
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -69,10 +66,14 @@ class User(db.Model,UserMixin):
             'is_admin' : self.is_admin,
             'promotion' : self.promotion
             }
-
+     
     @classmethod
     def find_by_id(cls, user_id):
-        return cls.query.filter_by(id=user_id).first()
+        return cls.query.filter_by(user_id=user_id).first()
+    
+    @classmethod
+    def find_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     def save_to_db(self):
         db.session.add(self)
@@ -165,7 +166,6 @@ class Candidacy(db.Model):
 def init_db():
     db.drop_all()
     db.create_all()
-    #db.session.add( )
 
 def seed_db():
     User(email= "cb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="ben", first_name= "charles", is_admin=True).save_to_db() 
@@ -215,6 +215,7 @@ def seed_db():
         data = list(reader)
 
     for i in data:
+        print(i)
         user = {
                 'email' : i[0],
                 'first_name' : i[1],

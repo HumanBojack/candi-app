@@ -46,3 +46,35 @@ class ModifyProfile(FlaskForm):
     current_password = PasswordField(label="Mot de passe actuel:", validators = [DataRequired()])
     new_password = PasswordField(label="Nouveau mot de passe:", validators = [DataRequired()])
     submit = SubmitField(label="Valider")
+
+class RecoverPw(FlaskForm):
+    """[Form to login]
+    """
+    email = EmailField(label="Adresse mail:", validators = [DataRequired()])
+    submit = SubmitField(label='Valider')
+class RecoverModifyPw(FlaskForm):
+    """[Form to login]
+    """
+    password = PasswordField(label="Password:", validators = [DataRequired()])
+    verify_password = PasswordField(label="Verify password:", validators = [DataRequired()])
+    submit = SubmitField(label='Valider')
+    
+class AccountGeneration(FlaskForm):
+    """[Form to login]
+    """
+    promotion = StringField(label="Promotion:", validators=[DataRequired()])
+    email = EmailField(label="Adresse mail:", validators = [DataRequired()])
+    submit = SubmitField(label='Valider')
+    
+class AccountCreation(FlaskForm):
+    """[Form to login]
+    """
+    
+    first_name = StringField(label="First name:", validators=[DataRequired()])
+    last_name = StringField(label="Last name:", validators = [DataRequired()])
+    phone = StringField(label="Phone number (Optionnal):")
+    password = PasswordField(label="Password:", validators = [DataRequired()])
+    verify_password = PasswordField(label="Verify password:", validators = [DataRequired()])
+    
+    
+    submit = SubmitField(label='Valider')
