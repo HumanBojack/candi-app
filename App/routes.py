@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request
-from .models import User, Candidacy, Company
+from .models import User, Candidacy, Company, Location
 from flask_restful import abort
 from App import app, db, app, mail
 from .forms import AccountCreation, AccountGeneration, Login, AddCandidacy, ModifyCandidacy, ModifyProfile, RecoverModifyPw, RecoverPw
@@ -110,10 +110,11 @@ def board_page():
     if (current_user.is_admin == True): 
         admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
         return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy=Candidacy.get_all_in_list_with_user_name())
+        # => Candidacy.query.all() ?
     else:
         # return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_user_id(current_user.id))
         usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
-        return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy = Candidacy.find_by_user_id(current_user.id))
+        return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id))
 
 @app.route('/logout')
 @login_required

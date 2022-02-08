@@ -127,6 +127,17 @@ class Candidacy(db.Model):
         for candidacy in cls.query.filter_by(user_id=user_id).all():
             candidacy_list.append(candidacy.json())
         return candidacy_list
+
+    @classmethod
+    def user_to_json(cls, id):
+        candidacies=[]
+        for candidacy in cls.query.filter_by(user_id=id).all():
+            candidacy_js = candidacy.json()
+            candidacy_js["user"] = f"{candidacy.user.first_name} {candidacy.user.last_name}"
+            candidacy_js["company"] = candidacy.company.name
+            candidacy_js["location"] = candidacy.location.region
+            candidacies.append(candidacy_js)
+        return candidacies
     
     @classmethod
     def get_all_in_list_with_user_name(cls):
@@ -195,18 +206,6 @@ def seed_db():
             # "location_id": i[3]
         }
         Company(**company).save_to_db()
-
-    # # Import and create jointable between locations and companies
-    # with open("App/static/seed/locationcompanyjt.csv", newline='') as f:
-    #     reader = csv.reader(f)
-    #     next(reader)
-    #     data = list(reader)
-    #     for i in data:
-    #         jt_element = {
-    #             "location_id": i[0], 
-    #             "company_id": i[1]
-    #         }
-    #         LocationCompanyJt(**jt_element).save_to_db()
     
     # Insert all users from  "static/liste_apprenants.csv"
     with open("App/static/seed/liste_apprenants.csv", newline='') as f:
