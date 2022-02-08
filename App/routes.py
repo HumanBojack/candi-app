@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
 from App import db, app
 from datetime import date
-from .models import User, Candidacy
+from .models import User, Candidacy, Company
 from .forms import Login, AddCandidacy, ModifyCandidacy, ModifyProfile
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -75,9 +75,20 @@ def add_candidature():
     """
     form = AddCandidacy()
     if form.validate_on_submit():
+        if form.radio.data == "1":
+            company = Company(
+                name=form.new_company_name.data,
+                sector=form.new_company_sector.data,
+                type=form.new_company_type.data
+            )
+            company.save_to_db() # should add a try and except on this in order to redirect if there is a problem
+            company_id = company.id
+        else:
+            company_id = form.company_id.data
+
         Candidacy(
             user_id=current_user.id,
-            company_id=form.company_id.data, #form.company_id.get('data'),
+            company_id=company_id, #form.company_id.get('data'),
             location_id=form.location_id.data,
             contact_full_name=form.contact_full_name.data,
             contact_email=form.contact_email.data,

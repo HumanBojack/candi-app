@@ -9,9 +9,30 @@
 
         {{ form.hidden_tag() }}
 
-        {{ form.company_id.label }}
-        {{ form.company_id(class="form-control") }}
         <br/>
+        <!-- Add a new company -->
+        {% for subfield in form.radio %}
+            <div>
+                {% if subfield.data == 0 %}
+                    {{ subfield }}
+                    {{ subfield.label }}
+                    <!-- Display the existing companies -->
+                    {{ form.company_id(class="form-control") }}
+                {% else %}
+                    
+                    {{ subfield }}
+                    {{ subfield.label }}
+                    <div class="form-row">
+                        {{ form.new_company_name(class="form-control col-md-6") }}
+                        {{ form.new_company_sector(class="form-control col-md-3") }}
+                        {{ form.new_company_type(class="form-control col-md-3") }}
+                    </div>
+                {% endif %}
+            </div>
+            <br/>
+        {% endfor %}
+
+        
 
         {{ form.location_id.label }}
         {{ form.location_id(class="form-control") }}

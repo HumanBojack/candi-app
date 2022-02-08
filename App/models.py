@@ -143,6 +143,7 @@ class Candidacy(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "company_id": self.company_id,
+            "location_id": self.location_id,
             "contact_full_name": self.contact_full_name,
             "contact_email": self.contact_email,
             "date": self.date,

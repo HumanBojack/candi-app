@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField
+from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField,RadioField
 from wtforms.validators import Length,DataRequired,Email,EqualTo,ValidationError,Optional
 from .models import User, Location, Company
 
@@ -14,9 +14,13 @@ class Login(FlaskForm):
 class AddCandidacy(FlaskForm):
     """[Form to add candidacy]
     """
-    # company_id = IntegerField(label='Entreprise', validators=[DataRequired()]) # a changer => SelectField peut être, généré à partir de Company
     company_choices = [(g.id, g.name) for g in Company.query.all()]
-    company_id = SelectField(label="Entreprise. Tapez son nom si elle n'est pas dans la liste", coerce=int, choices=company_choices)
+    company_id = SelectField(coerce=int, choices=company_choices) # label="Entreprise existante", 
+
+    radio = RadioField(choices=[(0, "Entreprise existante"), (1, "Nouvelle entreprise")], default=0)
+    new_company_name = StringField(label="Nom")
+    new_company_sector = SelectField(label="Secteur", choices=[(0,"Marketing"), (1, "Médical"), (2, "Industrie")])
+    new_company_type = SelectField(label="Type", choices=[(0, "Startup"), (1, "ESN"), (2, "Gros groupe")])
 
     location_choices = [(g.id, g.region) for g in Location.query.all()]
     location_id = SelectField(label="Le lieu de cette entreprise / antenne", coerce=int, choices=location_choices)
