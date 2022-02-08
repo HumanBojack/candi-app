@@ -130,7 +130,7 @@ class Candidacy(db.Model):
     @classmethod
     def get_all_in_list_with_user_name(cls):
         candidacy_list=[]
-        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, cls.email, cls.contact_phone, cls.date, cls.status).all():
+        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, User.email, cls.contact_phone, cls.date, cls.status).all():
             candidacy_list.append(candidacy)
         return candidacy_list
     
@@ -161,23 +161,6 @@ class Candidacy(db.Model):
         db.session.delete(self)
         db.session.commit()
  
-# class LocationCompanyJt(db.Model):
-#     __tablename__ = "locationcompanyjt"
-
-#     id = db.Column(db.Integer, primary_key=True, unique=True)
-#     location_id = db.Column(db.ForeignKey('location.id', ondelete='CASCADE'), nullable=False, index=True)
-#     company_id = db.Column(db.ForeignKey('company.id'), nullable=False, index=True)
-#     location = relationship('Location')
-#     company = relationship('Company')
-
-#     def save_to_db(self):
-#         db.session.add(self)
-#         db.session.commit()
-
-#     def delete_from_db(self):
-#         db.session.delete(self)
-#         db.session.commit()
-
 # Function to create db and populate it
 def init_db():
     db.drop_all()
