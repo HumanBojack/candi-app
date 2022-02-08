@@ -6,24 +6,56 @@
 <div class='container mt-5'>
     <h1>Nouvelle Candidature</h1>
     <form method="POST" class="form-register">
+
         {{ form.hidden_tag() }}
 
-        {{ form.entreprise.label }}
-        {{ form.entreprise(size=32, class="form-control") }}
-        <br>
+        <br/>
+        <!-- Add a new company -->
+        {% for subfield in form.radio %}
+            <div>
+                {% if subfield.data == 0 %}
+                    {{ subfield }}
+                    {{ subfield.label }}
+                    <!-- Display the existing companies -->
+                    {{ form.company_id(class="form-control") }}
+                {% else %}
+                    {{ subfield }}
+                    {{ subfield.label }}
+                    <!-- A form to add a new company -->
+                    <div class="form-row">
+                        {{ form.new_company_name(class="form-control col-md-6") }}
+                        {{ form.new_company_sector(class="form-control col-md-3") }}
+                        {{ form.new_company_type(class="form-control col-md-3") }}
+                    </div>
+                {% endif %}
+            </div>
+            <br/>
+        {% endfor %}
+
+        
+
+        {{ form.location_id.label }}
+        {{ form.location_id(class="form-control") }}
+        <br/>
 
         {{ form.contact_full_name.label }}
         {{ form.contact_full_name(size=32, class="form-control") }}
-        <br>
+        <br/>
 
         {{ form.contact_email.label }}
         {{ form.contact_email(size=32, class="form-control") }}
-        <br>
+        <br/>
 
-        {{ form.contact_mobilephone.label }}
-        {{ form.contact_mobilephone(size=32, class="form-control") }}
-        <br>  
+        {{ form.contact_phone.label }}
+        {{ form.contact_phone(size=32, class="form-control") }}
+        <br/> 
 
+        {{ form.job_title.label }}
+        {{ form.job_title(class="form-control") }}
+        <br/>
+
+        {{ form.contact_link.label }}
+        {{ form.contact_link(size=32, class="form-control") }}
 
         {{ form.submit(class="btn btn-lg btn-primary mt-4 d-block",id="button") }}
     </form>

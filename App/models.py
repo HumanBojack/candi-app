@@ -86,12 +86,9 @@ class Company(db.Model):
     __tablename__ = 'company'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False, unique=True)
     sector = db.Column(db.Integer, nullable=False, default=0)
     type = db.Column(db.Integer, nullable=False)
-    location_id = db.Column(db.ForeignKey('location.id', ondelete='CASCADE'), nullable=False, index=True)
-
-    location = relationship('Location')
     
     @classmethod
     def find_by_id(cls, company_id):
@@ -109,7 +106,8 @@ class Candidacy(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
     user_id = db.Column(db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False, index=True)
-    company_id = db.Column(db.ForeignKey('company.id'), nullable=False, index=True)
+    company_id = db.Column(db.ForeignKey('company.id', ondelete='CASCADE'), nullable=False, index=True)
+    location_id = db.Column(db.ForeignKey('location.id', ondelete='CASCADE'), nullable=False, index=True)
     contact_full_name = db.Column(db.String(50), nullable=False)
     contact_email = db.Column(db.String(100), nullable=True)
     date = db.Column(db.String(), default=datetime.date.today())
@@ -118,6 +116,7 @@ class Candidacy(db.Model):
     job_title = db.Column(db.Integer, nullable=False, default=0)
     contact_link = db.Column(db.String(255), nullable=True)
 
+    location = relationship('Location')
     company = relationship('Company')
     user = relationship('User')
     
@@ -128,15 +127,31 @@ class Candidacy(db.Model):
             candidacy_list.append(candidacy.json())
         return candidacy_list
     
+    @classmethod
     def get_all_in_list_with_user_name(cls):
         candidacy_list=[]
-        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, cls.email, cls.contact_phone, cls.date, cls.status).all():
+        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, User.email, cls.contact_phone, cls.date, cls.status).all():
             candidacy_list.append(candidacy)
         return candidacy_list
     
     @classmethod
     def find_by_id(cls, candidacy_id):
         return cls.query.filter_by(id=candidacy_id).first()
+
+    def json(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "company_id": self.company_id,
+            "location_id": self.location_id,
+            "contact_full_name": self.contact_full_name,
+            "contact_email": self.contact_email,
+            "date": self.date,
+            "contact_phone": self.contact_phone,
+            "status": self.status,
+            "job_title": self.job_title,
+            "contact_link": self.contact_link
+        }
 
     def save_to_db(self):
         db.session.add(self)
@@ -147,7 +162,6 @@ class Candidacy(db.Model):
         db.session.commit()
  
 # Function to create db and populate it
-    
 def init_db():
     db.drop_all()
     db.create_all()
@@ -177,10 +191,22 @@ def seed_db():
         company = {
             "name": i[0],
             "sector": i[1],
-            "type": i[2],
-            "location_id": i[3]
+            "type": i[2]
+            # "location_id": i[3]
         }
         Company(**company).save_to_db()
+
+    # # Import and create jointable between locations and companies
+    # with open("App/static/seed/locationcompanyjt.csv", newline='') as f:
+    #     reader = csv.reader(f)
+    #     next(reader)
+    #     data = list(reader)
+    #     for i in data:
+    #         jt_element = {
+    #             "location_id": i[0], 
+    #             "company_id": i[1]
+    #         }
+    #         LocationCompanyJt(**jt_element).save_to_db()
     
     # Insert all users from  "static/liste_apprenants.csv"
     with open("App/static/seed/liste_apprenants.csv", newline='') as f:
@@ -194,8 +220,8 @@ def seed_db():
                 'first_name' : i[1],
                 'last_name' : i[2],
                 'password' : generate_password_hash(i[3], method='sha256'),
-                'is_admin' : True if i[4] == "TRUE" else False,
-                'create_time': 00
+                'is_admin' : True if i[4] == "TRUE" else False
+                #'create_time': 00
             }
         User(**user).save_to_db()
 
@@ -214,7 +240,8 @@ def seed_db():
             "contact_phone": i[5],
             "status": i[6],
             "job_title": i[7],
-            "contact_link": i[8]
+            "contact_link": i[8],
+            "location_id": i[9]
         }
         Candidacy(**candidacy).save_to_db()
     
