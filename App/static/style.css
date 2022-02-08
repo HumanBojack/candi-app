@@ -65,11 +65,11 @@ h1{
   }
   /* demo styles */
   
-  @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,300,700);
+  @import ('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
   body{
-    background: -webkit-linear-gradient(left, #25c481, #25b7c4);
-    background: linear-gradient(to right, #25c481, #25b7c4);
-    font-family: 'Roboto', sans-serif;
+    background:rgba(255, 255, 255, 1) ;
+   
+    font-family: 'Nunito', sans-serif;
   }
   label{
     color:#fff;
@@ -81,4 +81,8 @@ h1{
     color: #fff;  
   }
   
+
+
+
+
   
