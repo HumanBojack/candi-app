@@ -19,9 +19,9 @@
                     <!-- Display the existing companies -->
                     {{ form.company_id(class="form-control") }}
                 {% else %}
-                    
                     {{ subfield }}
                     {{ subfield.label }}
+                    <!-- A form to add a new company -->
                     <div class="form-row">
                         {{ form.new_company_name(class="form-control col-md-6") }}
                         {{ form.new_company_sector(class="form-control col-md-3") }}
