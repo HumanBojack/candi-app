@@ -58,7 +58,7 @@ Board
                   </svg>
                 </a>
                
-                <a class="btn btn-danger" href="{{ url_for('delete_candidacy', id=candidacy['id']) }}" role="button" onclick = button_delete()>Supprimer</a>
+                <a class="btn btn-danger delete-btn" href="{{ url_for('delete_candidacy', id=candidacy['id']) }}" role="button">Supprimer</a>
               </td>
             {% endif %}
           </tr>
@@ -76,9 +76,16 @@ Board
 </section>
 
 
-<script type='text/javascript'> 
-  function button_delete(){
-      alert('Etes-vous sur de vouloir supprimer la candidature?')
+<script type='text/javascript'>
+
+  document.querySelectorAll('.delete-btn').forEach(item => {
+    item.addEventListener("click", onDeleteClick)
+  })
+  function onDeleteClick(e){
+    e.preventDefault()
+      if(confirm('Etes-vous sur de vouloir supprimer la candidature?')){
+        location.replace(e.target.href)
+      }
   } 
   </script> 
 {% endblock %}
