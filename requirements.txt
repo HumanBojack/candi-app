@@ -15,7 +15,7 @@ SQLAlchemy == 1.4.31
 Werkzeug == 2.0.2
 
 # candi-app/App/__init__.py: 6
-dotenv == 0.0.5
+# dotenv == 0.0.5
 
 # candi-app/App/__init__.py: 4
 # candi-app/App/routes.py: 9
