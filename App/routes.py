@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import render_template, redirect, url_for, flash, request
 from .models import User, Candidacy, Company, Location
 from flask_restful import abort
@@ -9,6 +10,18 @@ from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from random import *
 import string
+
+def admin_required(func):
+    """
+    Modified login_required decorator to restrict access to admin group.
+    """
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        if current_user.is_admin != 1:     
+            flash("You don't have permission to access this resource.", "warning")
+            return redirect(url_for("home_page"))
+        return func(*args, **kwargs)
+    return decorator
 
 def send_mail(title, body, email):
     msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
@@ -226,6 +239,7 @@ def delete_candidacy():
 
 @app.route('/account_generation', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def account_generation():
     form = AccountGeneration()
     if form.validate_on_submit():

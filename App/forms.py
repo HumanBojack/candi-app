@@ -16,12 +16,12 @@ class Candidacy(FlaskForm):
     """
     try:
         company_choices = [(g.id, g.name) for g in Company.query.all()]
-        company_id = SelectField(coerce=int, choices=company_choices)  
+        company_id = SelectField(coerce=int, choices=company_choices)
         location_choices = [(g.id, g.region) for g in Location.query.all()]
         location_id = SelectField(label="Le lieu de cette entreprise / antenne", coerce=int, choices=location_choices)
     except:
         pass
-
+    
     contact_full_name = StringField(label='Nom de la personne contactee', validators=[DataRequired()])
     contact_email = EmailField(label='Email de cette derniere') #, validators=[Email(message="Veuillez entrer une adresse email valide")])
     contact_phone = IntegerField(label='Son numero de telephone', validators=[Optional()])
