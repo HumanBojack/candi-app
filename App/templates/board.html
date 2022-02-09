@@ -76,10 +76,14 @@ Board
 </section>
 
 
-<script type='text/javascript'> 
+<script type="text/javascript">
   function button_delete(){
-      alert('Etes-vous sur de vouloir supprimer la candidature?')
-  } 
-  </script> 
+    confirm('Etes-vous sur de vouloir supprimer la candidature ?')
+    if (button_delete(null){
+        return false
+    }
+  }
+</script>
+
 {% endblock %}
 
