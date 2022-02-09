@@ -110,7 +110,7 @@ class Candidacy(db.Model):
     location_id = db.Column(db.ForeignKey('location.id', ondelete='CASCADE'), nullable=False, index=True)
     contact_full_name = db.Column(db.String(50), nullable=False)
     contact_email = db.Column(db.String(100), nullable=True)
-    date = db.Column(db.String(), default=datetime.date.today())
+    date = db.Column(db.String(), default=datetime.date.today()) # db.DateTime ?
     contact_phone = db.Column(db.Integer, nullable=True)
     status = db.Column(db.Integer, default=0)
     job_title = db.Column(db.Integer, nullable=False, default=0)

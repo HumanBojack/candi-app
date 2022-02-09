@@ -10,6 +10,7 @@ from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 from random import *
 import string
+from datetime import datetime
 
 def admin_required(func):
     """
@@ -205,10 +206,11 @@ def modify_candidacy(id):
         [str]: [modify candidacy code page]
     """
     candidacy = Candidacy.query.get_or_404(id)
-    form = ModifyCandidacy(**candidacy.json())
+    candidacy_js = candidacy.json()
+    candidacy_js["date"] = datetime.strptime(candidacy_js["date"], "%Y-%m-%d")
+    form = ModifyCandidacy(**candidacy_js)
 
     if form.validate_on_submit():
-
         candidacy.company_id = form.company_id.data
         candidacy.contact_full_name = form.contact_full_name.data
         candidacy.contact_email = form.contact_email.data
@@ -216,15 +218,14 @@ def modify_candidacy(id):
         candidacy.job_title = form.job_title.data
         candidacy.contact_link = form.contact_link.data
         candidacy.status = form.status.data
+        candidacy.date = form.date.data # .strftime("%Y-%m-%d")
 
         try:
             candidacy.save_to_db()
             return redirect(url_for('board_page'))
         except:
+            print("clamerde")
             flash('Something goes wrong',category="danger")
-
-        
-
 
     return render_template('modify_candidacy.html', form=form , candidacy=candidacy.json())
     
