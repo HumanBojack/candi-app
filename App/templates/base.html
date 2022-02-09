@@ -31,10 +31,14 @@
           <a class="nav-link active" aria-current="page" href="{{ url_for('home_page') }}">Home</a>
         </li>
         {% if current_user.is_authenticated %}
-        <li class="nav-item ml-3">
-          <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
-        </li> 
-          {% if current_user.is_admin %}       
+          {% if not current_user.is_admin %} 
+            <li class="nav-item ml-3">
+              <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
+            </li> 
+          {% else %}    
+          <li class="nav-item ml-3">
+            <a class="nav-link" href="{{ url_for('admin_board_page') }}">Board</a>
+          </li>   
           <li class="nav-item ml-3">
             <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
           </li>
