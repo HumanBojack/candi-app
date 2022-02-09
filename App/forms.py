@@ -1,6 +1,7 @@
+from argon2 import verify_password
 from flask_wtf import FlaskForm
 from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField,RadioField,DateField
-from wtforms.validators import Length,DataRequired,Email,EqualTo,ValidationError,Optional
+from wtforms.validators import Length,DataRequired,Email,EqualTo,Regexp,Optional
 from .models import User, Location, Company
 from App.static import constant
 from datetime import datetime
@@ -44,12 +45,14 @@ class ModifyCandidacy(Candidacy): # We should inherit add and modify from a cand
     status = SelectField(label="Status de la demande", choices=constant.STATUS)
     submit = SubmitField(label="Valider")
 
-class ModifyProfile(FlaskForm):
+class ModifyPassword(FlaskForm):
     """[Form to modify profile]
     """
-    email = EmailField(label="Adresse mail:", validators = [DataRequired()])
     current_password = PasswordField(label="Mot de passe actuel:", validators = [DataRequired()])
-    new_password = PasswordField(label="Nouveau mot de passe:", validators = [DataRequired()])
+    new_password = PasswordField(label="Nouveau mot de passe:", validators = [DataRequired(),
+        Regexp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$', message='Rip'),
+        EqualTo('verify_new_password', message='rip2')])
+    verify_new_password = PasswordField(label="Valider nouveau mot de passe:", validators = [DataRequired()])
     submit = SubmitField(label="Valider")
 
 class RecoverPw(FlaskForm):
@@ -61,7 +64,8 @@ class RecoverModifyPw(FlaskForm):
     """[Form to login]
     """
     password = PasswordField(label="Password:", validators = [DataRequired()])
-    verify_password = PasswordField(label="Verify password:", validators = [DataRequired()])
+    # 
+    verify_password = PasswordField(label="Verify password:", validators=[DataRequired()])
     submit = SubmitField(label='Valider')
     
 class AccountGeneration(FlaskForm):
