@@ -15,14 +15,13 @@ def admin_required(func):
     """
     Modified login_required decorator to restrict access to admin group.
     """
-
     @wraps(func)
-    def decorated_view(*args, **kwargs):
+    def decorator(*args, **kwargs):
         if current_user.is_admin != 1:     
             flash("You don't have permission to access this resource.", "warning")
             return redirect(url_for("home_page"))
         return func(*args, **kwargs)
-    return decorated_view
+    return decorator
 
 def send_mail(title, body, email):
     msg = Message(f'{title}', sender = 'candi.app.mailer@gmail.com', recipients = [f'{email}'])
