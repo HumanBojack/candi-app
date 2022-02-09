@@ -26,3 +26,6 @@ login_manager.login_message_category = "info"
 from App import routes
 from App import models
 
+if __name__ == "__main__":
+  app.run(threaded=True, port=5000)
+
