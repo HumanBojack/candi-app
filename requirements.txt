@@ -37,3 +37,5 @@ itsdangerous == 2.0.1
 
 # candi-app/App/__init__.py: 6
 python_dotenv == 0.19.2
+
+gunicorn
