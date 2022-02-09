@@ -136,6 +136,7 @@ class Candidacy(db.Model):
             candidacy_js["company"] = candidacy.company.name
             candidacy_js["location"] = candidacy.location.region
             candidacy_js["status_interpreted"] = constant.STATUS[int(candidacy.status)][1]
+            candidacy_js["job_title_interpreted"] = constant.JOB_TITLES[int(candidacy.status)][1]
             candidacies.append(candidacy_js)
         return candidacies
     
