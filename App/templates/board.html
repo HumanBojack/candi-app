@@ -75,18 +75,7 @@ Board
   {% endif %}
 </section>
 
-
-<script type='text/javascript'>
-
-  document.querySelectorAll('.delete-btn').forEach(item => {
-    item.addEventListener("click", onDeleteClick)
-  })
-  function onDeleteClick(e){
-    e.preventDefault()
-      if(confirm('Etes-vous sur de vouloir supprimer la candidature?')){
-        location.replace(e.target.href)
-      }
-  } 
-  </script> 
+  <script src="{{ url_for('static', filename='delete-btn.js') }}"></script>
+  
 {% endblock %}
 
