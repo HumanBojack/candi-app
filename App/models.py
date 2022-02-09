@@ -1,3 +1,4 @@
+import json
 from App import db, login_manager
 from App.static import constant
 import datetime 
@@ -141,10 +142,13 @@ class Candidacy(db.Model):
         return candidacies
     
     @classmethod
-    def get_all_in_list_with_user_name(cls):
+    def all_candidacies_to_list(cls):
         candidacy_list=[]
-        for candidacy in cls.query.join(User).with_entities(User.first_name, cls.contact_full_name, User.email, cls.contact_phone, cls.date, cls.status).all():
-            candidacy_list.append(candidacy)
+        for candidacy in cls.query.join(User, Company).with_entities(User.first_name, User.last_name, User.email, cls.contact_full_name, cls.contact_phone, Company.name, cls.date, cls.status, cls.job_title).all():
+            item = dict(candidacy)
+            item['status'] = constant.STATUS[int(candidacy.status)][1]
+            item['job_title'] = constant.JOB_TITLES[int(candidacy.status)][1]
+            candidacy_list.append(item)
         return candidacy_list
     
     @classmethod

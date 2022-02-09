@@ -67,7 +67,10 @@ def login_page():
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             flash(f"Vous êtes connecté en tant que : {user.first_name} {user.last_name}",category="success")
-            return redirect(url_for('board_page'))
+            if user.is_admin == 1:
+                return redirect(url_for('admin_board_page'))
+            else:
+                return redirect(url_for('board_page'))
         else:
             flash('Adresse email ou mot de passe invalide',category="danger")
     return render_template('login.html',form=form)
@@ -116,19 +119,14 @@ def board_page():
     Returns:
         [str]: [board page code different if the user is admin or not]
     """
-    # admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
-    # usercandidacy_attributs = ['entreprise','contact_full_name','contact_email', 'date','contact_phone','status']
+    usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
+    return render_template('board.html', title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id))
 
-    # This need to be done another way => Romain
-    if (current_user.is_admin == True): 
-        # admin_candidacy_attributs = ["user_fisrt_name",'entreprise','contact_full_name','contact_email', 'contact_mobilephone' ,'date','status']
-        # return render_template('board.html', lenght = len(admin_candidacy_attributs), title = admin_candidacy_attributs, user_candidacy=Candidacy.get_all_in_list_with_user_name())
-        # => Candidacy.query.all() ?
-        return render_template('admin_board.html')
-    else:
-        # return render_template('board.html', lenght = len(usercandidacy_attributs), title = usercandidacy_attributs , user_candidacy=Candidacy.find_by_user_id(current_user.id))
-        usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
-        return render_template('board.html', title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id))
+@app.route('/admin_board', methods=['GET','POST'])
+@login_required
+@admin_required
+def admin_board_page():
+    return render_template('admin_board.html', user_candidacy=Candidacy.all_candidacies_to_list())
 
 @app.route('/logout')
 @login_required
@@ -269,7 +267,6 @@ def account_generation():
     return render_template('account_generation.html', form=form)
 
 @app.route('/account_creation/<token>', methods=['GET', 'POST'])
-@login_required
 def account_creation(token):
     try:
         user = confirm_token(token, expiration=3600)
