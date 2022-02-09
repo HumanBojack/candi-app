@@ -65,7 +65,7 @@ h1{
   }
   /* demo styles */
   
-  @import ('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
+  @import('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
   body{
     background:rgba(255, 255, 255, 1) ;
    
