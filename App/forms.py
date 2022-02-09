@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField,RadioField
+from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField,RadioField,DateField
 from wtforms.validators import Length,DataRequired,Email,EqualTo,ValidationError,Optional
 from .models import User, Location, Company
 from App.static import constant
+from datetime import datetime
 
 class Login(FlaskForm):
     """[Form to login]
@@ -22,6 +23,7 @@ class Candidacy(FlaskForm):
     except:
         pass
     
+    date = DateField(label="Date d'inscription", default=datetime.today)
     contact_full_name = StringField(label='Nom de la personne contactee', validators=[DataRequired()])
     contact_email = EmailField(label='Email de cette derniere') #, validators=[Email(message="Veuillez entrer une adresse email valide")])
     contact_phone = IntegerField(label='Son numero de telephone', validators=[Optional()])

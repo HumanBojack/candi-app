@@ -168,7 +168,8 @@ def add_candidature():
             contact_email=form.contact_email.data,
             contact_phone=form.contact_phone.data,
             job_title=form.job_title.data,
-            contact_link=form.contact_link.data
+            contact_link=form.contact_link.data,
+            date=form.date.data
         ).save_to_db()
         flash('Nouvelle Candidature ajouté ', category='success')
         return redirect(url_for('board_page'))
