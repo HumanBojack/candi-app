@@ -17,7 +17,7 @@ h1{
     border-radius: 20px;
   }
   img{
-    width: 100%;
+    width: 30%;
     margin-bottom: 40px;
     margin-left: 25px;
   }
@@ -77,20 +77,13 @@ h1{
   }
   section{
     margin:50px;
+    border-radius: 20 px;
+    background-color: rgba(206,0,51,1);
   }
   a, a:hover{
     color: #fff;  
   }
 
-  .container {
-    margin: 20px auto;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background-color: rgba(206, 0, 51, 1);
-    border-radius: 40px;
-  }
 
 
   

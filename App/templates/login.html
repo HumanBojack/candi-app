@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
 {% block title %} 
-    Login
+    Connexion
 {% endblock %}
 
 {% block content %}
-    <div class='container mt-5'>
-        <h1> Connexion </h1>
-        <br>
-        <form method="POST" class="form-register">
+    <section class='row col-10 bg-red mx-auto justify-content-center'>
+       <div class="container mt-5">
+           <img src ='../static/big_logo_simplon.jpg' class='img-fluid rounded mx-auto d-block' alt = 'logo simplon'>
+           <br>
+            <form method="POST" class="form-register">
             {{ form.hidden_tag() }}
-            
+
             {{ form.email.label() }}
             {{ form.email(placeholder="exemple@exemple.com", class="form-control") }}
 
@@ -20,9 +21,14 @@
 
             <br>
             {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
-
-            <br><a href="{{ url_for('forgotten_pw') }}">Mot de passe oublié ?</a>
-        </form>
-    </div>
-</div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col">
+                    <br><a href="{{ url_for('forgotten_pw') }}" class= "text-center">Mot de passe oublié ?</a>
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </form>
+       </div>
+    </section>
 {% endblock %}
