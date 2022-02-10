@@ -20,15 +20,15 @@ class Candidacy(FlaskForm):
         company_choices = [(g.id, g.name) for g in Company.query.all()]
         company_id = SelectField(coerce=int, choices=company_choices)
         location_choices = [(g.id, g.region) for g in Location.query.all()]
-        location_id = SelectField(label="Le lieu de cette entreprise / antenne", coerce=int, choices=location_choices)
+        location_id = SelectField(label="Le lieu de cette entreprise / antenne *", coerce=int, choices=location_choices)
     except:
         pass
     
     date = DateField(label="Date d'inscription", default=datetime.today)
-    contact_full_name = StringField(label='Nom de la personne contactee', validators=[DataRequired()])
+    contact_full_name = StringField(label='Nom de la personne contactee *', validators=[DataRequired()])
     contact_email = EmailField(label='Email de cette derniere') #, validators=[Email(message="Veuillez entrer une adresse email valide")])
-    contact_phone = StringField(label='Son numero de telephone', validators = [Regexp('^[\\+33|0|0033][1-9][0-9]{8}$', message='Invalide phone number')])
-    job_title = SelectField("Intitule du poste", choices=constant.JOB_TITLES)
+    contact_phone = StringField(label='Son numero de telephone', validators = [Optional(), Regexp('^[\\+33|0|0033][1-9][0-9]{8}$', message='Invalide phone number')])
+    job_title = SelectField("Intitule du poste *", choices=constant.JOB_TITLES)
     contact_link = StringField(label="Lien de l'annonce / du site") #, validators=[URL(message="Veuillez entrer un lien valide")])
 class AddCandidacy(Candidacy):
     """[Form to add candidacy]
@@ -80,7 +80,7 @@ class AccountCreation(FlaskForm):
     """
     first_name = StringField(label="First name:", validators=[DataRequired()])
     last_name = StringField(label="Last name:", validators = [DataRequired()])
-    phone = StringField(label="Phone number (Optionnal):", validators = [Regexp('^[\\+33|0|0033][1-9][0-9]{8}$', message='Invalide phone number')])
+    phone = StringField(label='Phone number', validators = [Optional(), Regexp('^[\\+33|0|0033][1-9][0-9]{8}$', message='Invalide phone number')])
     password = PasswordField(label="Password:", validators = [DataRequired(),
         Regexp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$', message='Minimum eight characters, at least one upper case, one lower case, one number and one special character'),
         EqualTo('verify_password', message='Password must match')])

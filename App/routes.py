@@ -121,8 +121,7 @@ def board_page():
     Returns:
         [str]: [board page code different if the user is admin or not]
     """
-    usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
-    return render_template('board.html', title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id))
+    return render_template('board.html', user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id))
 
 @app.route('/admin_board', methods=['GET','POST'])
 @login_required
