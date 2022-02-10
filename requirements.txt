@@ -39,3 +39,5 @@ itsdangerous == 2.0.1
 python_dotenv == 0.19.2
 
 gunicorn
+
+psycopg2-binary 
