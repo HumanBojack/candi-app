@@ -93,7 +93,8 @@ def forgotten_pw():
             
             send_mail(subject, recover_url, user.email)
             return redirect(url_for('home_page'))
-        
+        else:
+            flash('Aucun compte connu lié à cette addresse, veuillez vous inscrire',category="danger")
     return render_template('recover_password.html',form=form)
 
 @app.route('/recover_pw/<token>', methods=['GET', 'POST'])
@@ -108,7 +109,7 @@ def recover_pw(token):
             user = User.query.filter_by(email=email).first()
             user.password = generate_password_hash(form.password.data, method='sha256')
             user.save_to_db()
-            flash(f"Vous êtes connecté en tant que : {user.first_name} {user.last_name}",category="success")
+            flash(f"Votre mot de passe a été modifié",category="success")
             return redirect(url_for('login_page'))
     return render_template('recover_modify_password.html',form=form)
                 
