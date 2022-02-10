@@ -81,4 +81,28 @@ h1{
     color: #fff;  
   }
   
-  
+
+  .sidebar{
+    position: fixed;
+    width: 20%;
+    height: 100%;
+    left: -50px;
+    top: 1px;
+    background: #CE0033;
+    border-radius: 30px;
+  }
+
+  .nav-item{
+    margin: 30px;
+    font-size: 25px;
+    }
+
+  .wrapper {
+    display: position;
+    align-items: stretch;
+    position: absolute;
+    width: 173px;
+    height: 28px;
+    left: 64px;
+    top: 362px;
+  }

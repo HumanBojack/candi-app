@@ -18,49 +18,15 @@
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="col-2">
-    <a class="navbar-brand" href="#">Made By Simplon</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    </div>
-    <div class="collapse navbar-collapse col-7" id="navbar">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{{ url_for('home_page') }}">Home</a>
-        </li>
-        {% if current_user.is_authenticated %}
-        <li class="nav-item ml-3">
-          <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
-        </li> 
-          {% if current_user.is_admin %}       
-          <li class="nav-item ml-3">
-            <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
-          </li>
-          {% endif %}
-        {% else %}
-        <li class="nav-item ml-3">
-          <a class="nav-link" href="{{ url_for('login_page') }}">Board</a>
-        </li>
-        {% endif %}
+  <nav class="sidebar">
+    <div class="wrapper">
+      <ul class="nav flex-column">
+        <li class="nav-item"></a class = 'nav-link' href="#">Accueil</a></li>
+        <li class="nav-item"></a class = 'nav-link' href="#">Mes candidatures</a></li>
+        <li class="nav-item"></a class = 'nav-link' href="#">Créer une nouvelle candidature</li>
+        <li class="nav-item"></a class = 'nav-link' href="#">Annuaire de l'équipe Simplon</a></li>
       </ul>
     </div>
-      <div class="col-3 text-right">
-        {% if current_user.is_authenticated %}
-        <span class="navbar-text">
-          Welcome, 
-          <a href="{{ url_for('modify_profile') }}"> {{ current_user.first_name }} {{ current_user.last_name }}</a>
-        </span>
-        <span class="navbar-text">
-          <a class="nav-link" href="{{ url_for('logout_page') }}">Log out</a>
-        </span>
-        {% else %}
-        <span class="navbar-text">
-          <a class="nav-link" href="{{ url_for('login_page') }}">Log in</a>
-        </span>
-        {% endif %}
-      </div>
   </nav>
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
