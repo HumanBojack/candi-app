@@ -250,7 +250,7 @@ def account_generation():
         user = User()
         user.email = form.email.data
         user.promotion = form.promotion.data
-        user.is_admin = False
+        user.is_admin = 0
         user.last_name = 'Unknown'
         user.first_name = 'Unknown'
         user.password = generate_password_hash(password, method='sha256')
