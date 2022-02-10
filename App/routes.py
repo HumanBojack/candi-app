@@ -46,15 +46,6 @@ def confirm_token(token, expiration):
     return data
 
 @app.route('/')
-@app.route('/home')
-def home_page():
-    """[Allow to generate the template of home.html on home path]
-
-    Returns:
-        [str]: [home page code]
-    """
-    return render_template('home.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     """[Allow to ask login and generate the template of login.html on login path]
