@@ -39,7 +39,7 @@
       <div class="col-3 text-right">
         <span class="navbar-text">
           Welcome, 
-          <a href="{{ url_for('modify_profile') }}"> {{ current_user.first_name }} {{ current_user.last_name }}</a>
+          <a href="{{ url_for('modify_password') }}"> {{ current_user.first_name }} {{ current_user.last_name }}</a>
         </span>
         <span class="navbar-text">
           <a class="nav-link" href="{{ url_for('logout_page') }}">Log out</a>
