@@ -180,12 +180,14 @@ class Candidacy(db.Model):
  
 # Function to create db and populate it
 def init_db():
+    db.session.commit()
     db.drop_all()
     db.create_all()
 
 def seed_db():
-    User(email= "cb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="ben", first_name= "charles", is_admin=True).save_to_db() 
-    User(email= "bb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="beniac", first_name= "cha", is_admin=False, promotion='Dev IA').save_to_db()
+    print('bc create')
+    User(email= "cb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="ben", first_name= "charles", is_admin=1).save_to_db() 
+    User(email= "bb@gmail.com", password = generate_password_hash("1234", method='sha256'), last_name="beniac", first_name= "cha", is_admin=0, promotion='Dev IA').save_to_db()
 
     # Import and creates regions
     with open("App/static/seed/regions.csv", newline='') as f:
@@ -208,7 +210,6 @@ def seed_db():
             "name": i[0],
             "sector": i[1],
             "type": i[2]
-            # "location_id": i[3]
         }
         Company(**company).save_to_db()
     
@@ -225,29 +226,29 @@ def seed_db():
                 'first_name' : i[1],
                 'last_name' : i[2],
                 'password' : generate_password_hash(i[3], method='sha256'),
-                'is_admin' : True if i[4] == "TRUE" else False
+                'is_admin' : i[4] # True if i[4] == "TRUE" else False
                 #'create_time': 00
             }
         User(**user).save_to_db()
 
     # Create candidacies from users and companies
-    with open("App/static/seed/candidacies.csv", newline='') as f:
-        reader = csv.reader(f)
-        next(reader)
-        data = list(reader)
-    for i in data:
-        candidacy = {
-            "user_id": i[0],
-            "company_id": i[1],
-            "contact_full_name": i[2],
-            "contact_email": i[3],
-            "date": i[4],
-            "contact_phone": i[5],
-            "status": i[6],
-            "job_title": i[7],
-            "contact_link": i[8],
-            "location_id": i[9]
-        }
-        Candidacy(**candidacy).save_to_db()
+    # with open("App/static/seed/candidacies.csv", newline='') as f:
+    #     reader = csv.reader(f)
+    #     next(reader)
+    #     data = list(reader)
+    # for i in data:
+    #     candidacy = {
+    #         "user_id": i[0],
+    #         "company_id": i[1],
+    #         "contact_full_name": i[2],
+    #         "contact_email": i[3],
+    #         "date": i[4],
+    #         "contact_phone": i[5],
+    #         "status": i[6],
+    #         "job_title": i[7],
+    #         "contact_link": i[8],
+    #         "location_id": i[9]
+    #     }
+    #     Candidacy(**candidacy).save_to_db()
     
     lg.warning('Database initialized!')

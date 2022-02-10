@@ -148,6 +148,7 @@ def add_candidature():
     """
     form = AddCandidacy()
     if form.validate_on_submit():
+        print('ok pour wtform')
         if form.radio.data == "1":
             company = Company(
                 name=form.new_company_name.data,
