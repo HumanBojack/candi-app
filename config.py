@@ -12,4 +12,14 @@ SECRET_KEY = 'VerySecret'
 SECURITY_PASSWORD_SALT = 'MyVerySecretTwo'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+JOBS = [
+    {
+        "id": "mailer",
+        "func": "App.jobs:mailer",
+        "trigger": "interval",
+        "seconds": 10
+    }
+]
+SCHEDULER_API_ENABLED = True
+
 
