@@ -1,19 +1,19 @@
+from this import d
 from App import app
-from .models import User
+from .models import User, Candidacy
 from flask_apscheduler import APScheduler
-# @app.cli.command()
-# def weekly_mail_to_users():
-#   print("Salut à tous !!!")
-#   print(str(User.query.all()))
+from datetime import datetime, timedelta
 
-#    $ flask run
-#* * * * * cd /Users/rom1/Documents/VSCode/candi-app/ && FLASK_APP=run.py /Users/rom1/opt/anaconda3/envs/flask/bin/python flask weekly-mail-to-users >>mail.log 2>&1
-# * * * * * cd /Users/rom1/Documents/VSCode/candi-app/ && FLASK_APP=run.py /Users/rom1/opt/anaconda3/envs/flask/bin/flask weekly-mail-to-users >>mail.log 2>&1
-
-print("working")
-
-def mailer():
-  print("Salut !")
+def weekly_mail_to_users():
+  today = datetime.utcnow().date()
+  last_week = today - timedelta(days=7)
+  with scheduler.app.app_context():
+    # candidacies = Candidacy.query.filter(Candidacy.date >= last_week, Candidacy.date < today).all()
+    # candidacies = Candidacy.query.filter(datetime.strptime(Candidacy.date, "%Y-%m-%d") >= last_week & datetime.strptime(Candidacy.date, "%Y-%m-%d") < today)
+    candidacies = Candidacy.query.filter(Candidacy.dateObj >= last_week).all()
+    for candidacy in candidacies:
+      print("one candidacy")
+  print("done")
 
 scheduler = APScheduler()
 scheduler.init_app(app)
