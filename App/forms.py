@@ -1,4 +1,3 @@
-from argon2 import verify_password
 from flask_wtf import FlaskForm
 from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField,RadioField,DateField
 from wtforms.validators import Length,DataRequired,Email,EqualTo,Regexp,Optional

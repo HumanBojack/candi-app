@@ -65,6 +65,8 @@ h1{
   
   #button{
     margin: 0 auto;
+    background-color: rgba(196, 196, 196, 1);
+    border-color:rgba(196, 196, 196, 1) ;
   }
   /* demo styles */
   
@@ -79,9 +81,9 @@ body{
     display: flex;
     align-content: center;
   }
-  section{
+#red_section{
     margin:50px;
-    border-radius: 20 px;
+    border-radius: 20px;
     background-color: rgba(206,0,51,1);
   }
   a, a:hover{

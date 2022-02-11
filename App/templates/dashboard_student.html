@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+<section >
+  <h1>Dashboard</h1>
+<h2> Entreprises à relancer</h2>
+{% if user_candidacy  %}
+  <div class="tbl">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <thead>
+        <tr>
+          <th>Apprenant</th>
+          <th>Mail apprenant</th>
+          <th>Contact</th>
+          <th>Entreprise</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Intitulé du poste</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="tbl-content">
+    <table cellpadding="0" cellspacing="0" border="0">
+      <tbody>
+        {% for candidacy in user_candidacy %}
+          <tr>
+            <td>{{ candidacy.first_name + ' ' + candidacy.last_name }}</td>
+            <td>{{ candidacy.email }}</td>
+            <td>
+              <ul>
+                <li>{{ candidacy.contact_full_name }}</li>
+                {% if candidacy.contact_email %}
+                  <li>{{ candidacy.contact_email }}</li>
+                {% endif %}
+                {% if candidacy.contact_phone %}
+                  <li>{{ candidacy.contact_phone }}</li>
+                {% endif %}
+              </ul>
+            </td>
+            <td>{{ candidacy.name }}</td>
+            <td>{{ candidacy.date }}</td>
+            <td>{{ candidacy.status }}</td>
+            <td>{{ candidacy.job_title }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<script type='text/javascript'>
+  function button_delete(){
+      alert('Etes-vous sur de vouloir supprimer la candidature?')
+  }
+  </script>
+{% endblock %}

@@ -62,7 +62,7 @@ def login_page():
             if user.is_admin == 1:
                 return redirect(url_for('admin_board_page'))
             else:
-                return redirect(url_for('board_page'))
+                return redirect(url_for('dashboard_student_page'))
         else:
             flash('Adresse email ou mot de passe invalide',category="danger")
     return render_template('login.html',form=form)
@@ -113,7 +113,18 @@ def board_page():
         [str]: [board page code different if the user is admin or not]
     """
     usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
-    return render_template('board.html', title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id))
+    return render_template('board.html', title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id)
+
+@app.route('/dashboard_student', methods=['GET','POST'])
+@login_required
+def dashboard_student_page():
+    """[Allow to generate the template of dashboard_student.html on board path, if user is authenticated else return on login]
+
+    Returns:
+        [str]: [board page code different if the user is admin or not]
+    """
+    usercandidacy_attributs = [column.key for column in Candidacy.__table__.columns]
+    return render_template('board.html', title = usercandidacy_attributs , user_candidacy = Candidacy.user_to_json(current_user.id)) #Candidacy.find_by_user_id(current_user.id)
 
 @app.route('/admin_board', methods=['GET','POST'])
 @login_required
