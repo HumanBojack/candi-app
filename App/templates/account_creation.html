@@ -34,7 +34,10 @@
             {{ form.last_name(placeholder="Doe", class="form-control") }}
             <br>
             {{ form.phone.label() }}
-            {{ form.phone(placeholder="0606060606", class="form-control") }}
+            <div class="input-group flex-nowrap">
+                <span class="input-group-text" id="addon-wrapping">+33</span>
+                {{ form.phone(size=32, class="form-control") }}
+            </div>
             <br>
             {{ form.password.label() }}
             {{ form.password(placeholder="***********", class="form-control") }}

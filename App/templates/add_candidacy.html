@@ -3,6 +3,14 @@
     Ajout candidature
 {% endblock %}
 {% block content%}
+{% if form.contact_phone.errors %}
+    {% for error in form.contact_phone.errors %}
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> {{ error }}
+        </div>
+    {% endfor %}
+{% endif %}
 <div class='container mt-5'>
     <h1>Nouvelle Candidature</h1>
     <form method="POST" class="form-register">
@@ -45,9 +53,11 @@
         {{ form.contact_email.label }}
         {{ form.contact_email(size=32, class="form-control") }}
         <br/>
-
         {{ form.contact_phone.label }}
-        {{ form.contact_phone(size=32, class="form-control") }}
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping">+33</span>
+            {{ form.contact_phone(size=32, class="form-control") }}
+        </div>
         <br/> 
 
         {{ form.job_title.label }}

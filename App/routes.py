@@ -92,6 +92,7 @@ def forgotten_pw():
                 _external=True)
             
             send_mail(subject, recover_url, user.email)
+            flash('An email has been sent to your address', category="success")
             return redirect(url_for('home_page'))
         else:
             flash('Aucun compte connu lié à cette addresse, veuillez vous inscrire',category="danger")

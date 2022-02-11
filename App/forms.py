@@ -28,7 +28,7 @@ class Candidacy(FlaskForm):
     date = DateField(label="Date d'inscription", default=datetime.today)
     contact_full_name = StringField(label='Nom de la personne contactee *', validators=[DataRequired()])
     contact_email = EmailField(label='Email de cette derniere') #, validators=[Email(message="Veuillez entrer une adresse email valide")])
-    contact_phone = StringField(label='Son numero de telephone', validators = [Optional(), Regexp('^[\\+33|0|0033][1-9][0-9]{8}$', message='Invalide phone number')])
+    contact_phone = StringField(label='Son numero de telephone', validators = [Optional(), Regexp('^[\\+33|0|0033]{,1}[1-9][0-9]{8}$', message='Invalide phone number')])
     job_title = SelectField("Intitule du poste *", choices=constant.JOB_TITLES)
     contact_link = StringField(label="Lien de l'annonce / du site") #, validators=[URL(message="Veuillez entrer un lien valide")])
 
@@ -85,7 +85,7 @@ class AccountCreation(FlaskForm):
     """
     first_name = StringField(label="First name:", validators=[DataRequired()])
     last_name = StringField(label="Last name:", validators = [DataRequired()])
-    phone = StringField(label='Phone number', validators = [Optional(), Regexp('^[\\+33|0|0033][1-9][0-9]{8}$', message='Invalide phone number')])
+    phone = StringField(label='Phone number', validators = [Optional(), Regexp('^[\\+33|0|0033]{,1}[1-9][0-9]{8}$', message='Invalide phone number')])
     password = PasswordField(label="Password:", validators = [DataRequired(),
         Regexp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$', message='Minimum eight characters, at least one upper case, one lower case, one number and one special character'),
         EqualTo('verify_password', message='Password must match')])

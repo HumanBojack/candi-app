@@ -34,9 +34,11 @@
             {{ form.contact_email.label }}
             {{ form.contact_email(size=32, class="form-control") }}
             <br/>
-
             {{ form.contact_phone.label }}
-            {{ form.contact_phone(size=32, class="form-control") }}
+            <div class="input-group flex-nowrap">
+                <span class="input-group-text" id="addon-wrapping">+33</span>
+                {{ form.contact_phone(size=32, class="form-control") }}
+            </div>
             <br/> 
 
             {{ form.job_title.label }}
