@@ -5,6 +5,22 @@
 {% endblock %}
 
 {% block content %}
+{% if form.password.errors %}
+    {% for error in form.password.errors %}
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> {{ error }}
+        </div>
+    {% endfor %}
+{% endif %}
+{% if form.phone.errors %}
+    {% for error in form.phone.errors %}
+        <div class="alert alert-warning alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> {{ error }}
+        </div>
+    {% endfor %}
+{% endif %}
     <div class='container mt-5'>
         <h1 class="text-center"> Modifier mot de passe </h1>
         <br>

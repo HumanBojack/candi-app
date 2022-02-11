@@ -137,7 +137,7 @@ class Candidacy(db.Model):
             candidacy_js["company"] = candidacy.company.name
             candidacy_js["location"] = candidacy.location.region
             candidacy_js["status_interpreted"] = constant.STATUS[int(candidacy.status)][1]
-            candidacy_js["job_title_interpreted"] = constant.JOB_TITLES[int(candidacy.status)][1]
+            candidacy_js["job_title_interpreted"] =  constant.JOB_TITLES[int(candidacy.job_title)][1]
             candidacies.append(candidacy_js)
         return candidacies
     
@@ -147,7 +147,7 @@ class Candidacy(db.Model):
         for candidacy in cls.query.join(User, Company).with_entities(User.first_name, User.last_name, User.email, cls.contact_full_name, cls.contact_phone, Company.name, cls.date, cls.status, cls.job_title).all():
             item = dict(candidacy)
             item['status'] = constant.STATUS[int(candidacy.status)][1]
-            item['job_title'] = constant.JOB_TITLES[int(candidacy.status)][1]
+            item['job_title'] = constant.JOB_TITLES[int(candidacy.job_title)][1]
             candidacy_list.append(item)
         return candidacy_list
     
