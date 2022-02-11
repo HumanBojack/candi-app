@@ -10,10 +10,11 @@ def weekly_mail_to_users():
   with scheduler.app.app_context():
     # candidacies = Candidacy.query.filter(Candidacy.date >= last_week, Candidacy.date < today).all()
     # candidacies = Candidacy.query.filter(datetime.strptime(Candidacy.date, "%Y-%m-%d") >= last_week & datetime.strptime(Candidacy.date, "%Y-%m-%d") < today)
-    candidacies = Candidacy.query.filter(Candidacy.dateObj >= last_week).all()
-    for candidacy in candidacies:
-      print("one candidacy")
-  print("done")
+    # candidacies = Candidacy.query.filter(Candidacy.date >= last_week).all()
+    # print(candidacies)
+    # for candidacy in candidacies:
+    #   print("one candidacy")
+    print("done")
 
 scheduler = APScheduler()
 scheduler.init_app(app)
