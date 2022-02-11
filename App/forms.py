@@ -15,9 +15,10 @@ class Login(FlaskForm):
 class Candidacy(FlaskForm):
     """[Create the basis of the Candidacies forms]
     """
+
     try:
-        company_choices = [(g.id, g.name) for g in Company.query.all()]
-        company_id = SelectField(coerce=int, choices=company_choices)
+        company_id = SelectField("Company_id", coerce=int)
+
         location_choices = [(g.id, g.region) for g in Location.query.all()]
         location_id = SelectField(label="Le lieu de cette entreprise / antenne", coerce=int, choices=location_choices)
     except:
@@ -29,6 +30,10 @@ class Candidacy(FlaskForm):
     contact_phone = IntegerField(label='Son numero de telephone', validators=[Optional()])
     job_title = SelectField("Intitule du poste", choices=constant.JOB_TITLES)
     contact_link = StringField(label="Lien de l'annonce / du site") #, validators=[URL(message="Veuillez entrer un lien valide")])
+
+    def __init__(self, *args, **kwargs):
+        super(Candidacy, self).__init__(*args, **kwargs)
+        self.company_id.choices = [(g.id, g.name) for g in Company.query.all()]
 class AddCandidacy(Candidacy):
     """[Form to add candidacy]
     """
