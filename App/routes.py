@@ -214,7 +214,6 @@ def modify_candidacy(id):
     """
     candidacy = Candidacy.query.get_or_404(id)
     candidacy_js = candidacy.json()
-    candidacy_js["date"] = datetime.strptime(candidacy_js["date"], "%Y-%m-%d")
     form = ModifyCandidacy(**candidacy_js)
 
     if form.validate_on_submit():
