@@ -160,14 +160,18 @@ def add_candidature():
             company_id = company.id
         else:
             company_id = form.company_id.data
-
+        
+        contact_phone = None
+        if form.contact_phone.data != '':
+            contact_phone = form.contact_phone.data
+            
         Candidacy(
             user_id=current_user.id,
             company_id=company_id, #form.company_id.get('data'),
             location_id=form.location_id.data,
             contact_full_name=form.contact_full_name.data,
             contact_email=form.contact_email.data,
-            contact_phone=form.contact_phone.data,
+            contact_phone=contact_phone,
             job_title=form.job_title.data,
             contact_link=form.contact_link.data,
             date=form.date.data
@@ -217,7 +221,10 @@ def modify_candidacy(id):
         candidacy.company_id = form.company_id.data
         candidacy.contact_full_name = form.contact_full_name.data
         candidacy.contact_email = form.contact_email.data
-        candidacy.contact_phone = form.contact_phone.data
+        if form.contact_phone.data == "":
+            candidacy.contact_phone = None
+        else:
+            candidacy.contact_phone = form.contact_phone.data
         candidacy.job_title = form.job_title.data
         candidacy.contact_link = form.contact_link.data
         candidacy.status = form.status.data
@@ -288,7 +295,8 @@ def account_creation(token):
             new_user.password = generate_password_hash(form.password.data, method='sha256')
             new_user.first_name = form.first_name.data
             new_user.last_name = form.last_name.data
-            if form.phone.data:
+            new_user.phone_number = None
+            if form.phone.data == '':
                 new_user.phone_number = form.phone.data
             new_user.save_to_db()
             flash('Account created', category='success')
