@@ -41,3 +41,5 @@ python_dotenv == 0.19.2
 gunicorn
 
 psycopg2-binary 
+
+flask-apscheduler
