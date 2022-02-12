@@ -22,3 +22,11 @@ JOBS = [
     }
 ]
 SCHEDULER_API_ENABLED = True
+
+# Mail configuration
+MAIL_SERVER = "smtp.gmail.com"
+MAIL_PORT = 465
+MAIL_USERNAME = os.getenv("MAILER_ADRESSE")
+MAIL_PASSWORD = os.getenv("MAILER_PASSSWORD")
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
