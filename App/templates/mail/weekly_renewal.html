@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Les relances de la semaine</title>
+</head>
+
+<body>
+
+  <h1>Bonjour {{ user.first_name }} !</h1>
+
+  <p>La semaine dernière, tu as contacté {{ candidacies|length }} entreprise(s), pense donc à les relancer cette
+    semaine.
+    La / les voici : </p>
+
+  <ul>
+    {% for candidacy in candidacies %}
+    <li>{{ candidacy.company.name }}, le {{ candidacy.date }}</li>
+    {% endfor %}
+  </ul>
+
+</body>
+
+</html>
