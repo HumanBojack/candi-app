@@ -23,6 +23,7 @@ JOBS = [
     }
 ]
 SCHEDULER_API_ENABLED = True
+SCHEDULER_TIMEZONE = "Europe/Paris"
 
 # Mail configuration
 MAIL_SERVER = "smtp.gmail.com"
