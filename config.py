@@ -17,8 +17,9 @@ JOBS = [
     {
         "id": "mailer",
         "func": "App.jobs:weekly_mail_to_users",
-        "trigger": "interval",
-        "seconds": 20,
+        "trigger": "cron",
+        "day_of_week": "mon",
+        "hour": 18,
     }
 ]
 SCHEDULER_API_ENABLED = True
