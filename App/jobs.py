@@ -16,18 +16,12 @@ def weekly_mail_to_users():
 
         user_candidacies = dict()
         for candidacy in candidacies:
-            # user = user_candidacies.get(candidacy.user_id, None)
-            # if user is None:
-            #     user_candidacies[candidacy.user_id] = list()
             if user_candidacies.get(candidacy.user_id) is None:
                 user_candidacies[candidacy.user_id] = list()
             user_candidacies[candidacy.user_id].append(candidacy)
-        print(user_candidacies)
 
         for user_id, candidacies in user_candidacies.items():
             # send a mail to every user with the candidacies that he need to contact once again
-            # print(User.query.get(user_id).email)
-            print(candidacies[0].company.name)
             user = User.query.get(user_id)
 
             msg = Message(
@@ -44,9 +38,6 @@ def weekly_mail_to_users():
                 mail.send(msg)
             except:
                 continue
-
-        # print(candidacy.contact_full_name)
-        print("done")
 
 
 scheduler = APScheduler()
