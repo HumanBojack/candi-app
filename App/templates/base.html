@@ -7,8 +7,6 @@
   <link rel="icon" href="../static/logo_simplon.png">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    crossorigin="anonymous" />
   <link rel="stylesheet" href="/static/style.css">
   <title>
     {% block title %}
@@ -20,10 +18,10 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="col-2">
-    <a class="navbar-brand" href="#">Made By Simplon</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <a class="navbar-brand" href="#">Made By Simplon</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
     <div class="collapse navbar-collapse col-7" id="navbar">
       <ul class="navbar-nav">
@@ -31,18 +29,18 @@
           <a class="nav-link active" aria-current="page" href="{{ url_for('home_page') }}">Home</a>
         </li>
         {% if current_user.is_authenticated %}
-          {% if not current_user.is_admin %} 
-            <li class="nav-item ml-3">
-              <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
-            </li> 
-          {% else %}    
-          <li class="nav-item ml-3">
-            <a class="nav-link" href="{{ url_for('admin_board_page') }}">Board</a>
-          </li>   
-          <li class="nav-item ml-3">
-            <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
-          </li>
-          {% endif %}
+        {% if not current_user.is_admin %}
+        <li class="nav-item ml-3">
+          <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
+        </li>
+        {% else %}
+        <li class="nav-item ml-3">
+          <a class="nav-link" href="{{ url_for('admin_board_page') }}">Board</a>
+        </li>
+        <li class="nav-item ml-3">
+          <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
+        </li>
+        {% endif %}
         {% else %}
         <li class="nav-item ml-3">
           <a class="nav-link" href="{{ url_for('login_page') }}">Board</a>
@@ -50,21 +48,21 @@
         {% endif %}
       </ul>
     </div>
-      <div class="col-3 text-right">
-        {% if current_user.is_authenticated %}
-        <span class="navbar-text">
-          Welcome, 
-          <a href="{{ url_for('modify_password') }}"> {{ current_user.first_name }} {{ current_user.last_name }}</a>
-        </span>
-        <span class="navbar-text">
-          <a class="nav-link" href="{{ url_for('logout_page') }}">Log out</a>
-        </span>
-        {% else %}
-        <span class="navbar-text">
-          <a class="nav-link" href="{{ url_for('login_page') }}">Log in</a>
-        </span>
-        {% endif %}
-      </div>
+    <div class="col-3 text-right">
+      {% if current_user.is_authenticated %}
+      <span class="navbar-text">
+        Welcome,
+        <a href="{{ url_for('modify_password') }}"> {{ current_user.first_name }} {{ current_user.last_name }}</a>
+      </span>
+      <span class="navbar-text">
+        <a class="nav-link" href="{{ url_for('logout_page') }}">Log out</a>
+      </span>
+      {% else %}
+      <span class="navbar-text">
+        <a class="nav-link" href="{{ url_for('login_page') }}">Log in</a>
+      </span>
+      {% endif %}
+    </div>
   </nav>
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -83,15 +81,16 @@
   {% block content %}
   {% endblock %}
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-  crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-  crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 
-  </body>
+</body>
+
 </html>
