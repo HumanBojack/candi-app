@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField,EmailField,SubmitField,StringField,SelectField,IntegerField,RadioField,DateField
 from wtforms.validators import Length,DataRequired,Email,EqualTo,Regexp,Optional
-from .models import User, Location, Company
+
+from App.models.candidacies import Candidacy
+from App.models.companies import Company
+from App.models.locations import Location
 from App.static import constant
 from datetime import datetime
 
@@ -12,7 +15,7 @@ class Login(FlaskForm):
     password = PasswordField(label="Mot de passe:", validators = [DataRequired()])
     submit = SubmitField(label="Se connecter")
     
-class Candidacy(FlaskForm):
+class CreateCandidacy(FlaskForm):
     """[Create the basis of the Candidacies forms]
     """
 

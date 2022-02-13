@@ -1,5 +1,6 @@
 from App import app, mail
-from .models import User, Candidacy
+from App.models.candidacies import Candidacy
+from App.models.users import User
 from flask_apscheduler import APScheduler
 from flask import render_template
 from flask_mail import Message

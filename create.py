@@ -1,4 +1,4 @@
-from App import models
+from App.models.db_seed import init_db, seed_db
 
-models.init_db()
-models.seed_db()
+init_db()
+seed_db()
