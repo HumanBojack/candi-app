@@ -35,9 +35,9 @@ class CreateCandidacy(FlaskForm):
     contact_link = StringField(label="Lien de l'annonce / du site") #, validators=[URL(message="Veuillez entrer un lien valide")])
 
     def __init__(self, *args, **kwargs):
-        super(Candidacy, self).__init__(*args, **kwargs)
+        super(CreateCandidacy, self).__init__(*args, **kwargs)
         self.company_id.choices = [(g.id, g.name) for g in Company.query.all()]
-class AddCandidacy(Candidacy):
+class AddCandidacy(CreateCandidacy):
     """[Form to add candidacy]
     """
     radio = RadioField(choices=[(0, "Entreprise existante"), (1, "Nouvelle entreprise")], default=0)
@@ -45,7 +45,7 @@ class AddCandidacy(Candidacy):
     new_company_sector = SelectField(label="Secteur", choices=constant.COMPANY_SECTOR)
     new_company_type = SelectField(label="Type", choices=constant.COMPANY_TYPE)
     submit = SubmitField(label='Ajouter')
-class ModifyCandidacy(Candidacy): # We should inherit add and modify from a candidacy class
+class ModifyCandidacy(CreateCandidacy): # We should inherit add and modify from a candidacy class
     """[form to modify candidacy]
     """
     status = SelectField(label="Status de la demande", choices=constant.STATUS)
