@@ -28,7 +28,7 @@ Dashboard
     </table>
   </div>
   <div class="tbl-content">
-    <table cellpadding="0" cellspacing="0" border="0">
+    <table>
       <tbody>
         {% for candidacy in user_candidacy %}
           <tr>
@@ -65,13 +65,11 @@ Dashboard
       </tbody>
     </table>
   </div>
-  {% if current_user.is_admin == False %}
   <div>
       <button class="btn btn-lg btn-primary mt-4 d-block" id="button">
-        <a href="{{ url_for('add_candidature') }}">Ajouter candidature</a>
+        <a href="{{ url_for('add_candidature') }}">Ajouter une  candidature</a>
       </button>
   </div>
-  {% endif %}
 </section>
 
   <script src="{{ url_for('static', filename='delete-btn.js') }}"></script>

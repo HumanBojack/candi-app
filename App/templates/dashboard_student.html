@@ -6,18 +6,13 @@ Dashboard
 
 {% block content %}
     <body class="board">
-        <div class=""col-sm-12 main">
-        <section >
-        <h1>Dashboard</h1>
-            <h2> Entreprises à relancer</h2>
-                {% if user_candidacy|length > 1 %}
-                    <p>Tu n'as pas d'entreprises à relancer , félicitations!</p>
-                {% else %}
-        <div class="tbl">
-            <table cellpadding="0" cellspacing="0" border="0">
+        <div class="row">
+        <div class="table-dark table-striped">
+            <table>
                 <thead>
+                <tr>Entreprises à relancer</tr>
                     <tr>
-                        <th>Entreprise</th>
+                        <th>Entreprises</th>
                         <th>Contact</th>
                         <th>Date</th>
                         <th>Status</th>
@@ -57,18 +52,18 @@ Dashboard
               </td>
             </tr>
         {% endfor %}
-      {% endif %}
+
       </tbody>
     </table>
   </div>
-</section>
+    </section>
+            </div>
         </div>
     </body>
 
-
-<script type='text/javascript'>
-  function button_delete(){
-      alert('Etes-vous sur de vouloir supprimer la candidature?')
-  }
-  </script>
 {% endblock %}
+    <script type='text/javascript'>
+    function button_delete(){
+        alert('Etes-vous sur de vouloir supprimer la candidature?')
+    }
+    </script>

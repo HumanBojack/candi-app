@@ -82,7 +82,7 @@ class User(db.Model,UserMixin):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
-        
+
 class Company(db.Model):
     __tablename__ = 'company'
 
