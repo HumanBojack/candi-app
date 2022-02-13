@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %} 
-    Login
+{% block title %}
+Login
 {% endblock %}
 
 {% block content %}
-    <div class='container mt-5'>
-        <h1> Log in </h1>
+<div class='container mt-5'>
+    <h1> Log in </h1>
+    <br>
+    <form method="POST" class="form-register">
+        {{ form.hidden_tag() }}
+
+        {{ form.email.label() }}
+        {{ form.email(placeholder="exemple@exemple.com", class="form-control") }}
+
         <br>
-        <form method="POST" class="form-register">
-            {{ form.hidden_tag() }}
-            
-            {{ form.email.label() }}
-            {{ form.email(placeholder="exemple@exemple.com", class="form-control") }}
+        {{ form.password.label() }}
+        {{ form.password(class="form-control") }}
 
-            <br>
-            {{ form.password.label() }}
-            {{ form.password(placeholder="***********", class="form-control") }}
+        <br>
+        {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
 
-            <br>
-            {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
-
-            <br><a href="{{ url_for('forgotten_pw') }}">Mot de passe oublié ?</a>
-        </form>
-    </div>  
+        <br><a href="{{ url_for('forgotten_pw') }}">Mot de passe oublié ?</a>
+    </form>
+</div>
 {% endblock %}
