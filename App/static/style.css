@@ -89,7 +89,9 @@ body{
   a, a:hover{
     color: #fff;  
   }
-
+.board{
+  background-color: rgba(196, 196, 196, 1);
+}
 
 
   
