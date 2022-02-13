@@ -93,6 +93,49 @@ body{
   background-color: rgba(196, 196, 196, 1);
 }
 
+ .sidebar{
+    position: fixed;
+    width: 15%;
+    height: 100%;
+    left: -20px;
+    top: 1px;
+    background: #CE0033;
+    border-radius: 30px;
+     display: block;
+  }
+
+  .nav-item{
+    margin: 30px;
+    font-size: 25px;
+    }
+
+  #wrapper2 {
+    display: fixed;
+    align-items: stretch;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 20%;
+    margin: 50px;
+      font-size: 18;
+  }
+
+  #wrapper1{
+    display: stretch;
+    align-items: stretch;
+    position: left;
+    width: 20%;
+    height: 100%;
+    left: 20%;
+    top: 0%;
+    margin: 100px;
+  }
+
+  #button_red{
+      background-color: #CE0033;
+  }
+
 
   
 

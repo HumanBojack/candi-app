@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block title %}
-    Ajout candidature
+    Créer une candidature
 {% endblock %}
 {% block content%}
+    <body class="board">
 <div class='container mt-5'>
     <h1>Nouvelle Candidature</h1>
     <form method="POST" class="form-register">
@@ -61,7 +62,8 @@
         {{ form.date.label }}
         {{ form.date(class="form-control") }}
 
-        {{ form.submit(class="btn btn-lg btn-primary mt-4 d-block",id="button") }}
+        {{ form.submit(class="btn btn-lg btn-primary mt-4 d-block",id="button_red") }}
     </form>
 </div>
+    </body>
 {% endblock %}

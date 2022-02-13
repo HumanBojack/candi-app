@@ -6,10 +6,11 @@ Dashboard
 
 {% block content %}
     <body class="board">
+        <div class=""col-sm-12 main">
         <section >
         <h1>Dashboard</h1>
             <h2> Entreprises à relancer</h2>
-                {% if user_candidacy == True%}
+                {% if user_candidacy|length > 1 %}
                     <p>Tu n'as pas d'entreprises à relancer , félicitations!</p>
                 {% else %}
         <div class="tbl">
@@ -61,6 +62,7 @@ Dashboard
     </table>
   </div>
 </section>
+        </div>
     </body>
 
 

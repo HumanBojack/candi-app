@@ -18,33 +18,34 @@
 
 <body>
   {% if current_user.is_authenticated %}
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-   )
-    <div class="collapse navbar-collapse col-7" id="navbar">
-      <ul class="navbar-nav">
-          {% if not current_user.is_admin %} 
-            <li class="nav-item ml-3">
-              <a class="nav-link" href="{{ url_for('board_page') }}">Board</a>
-            </li> 
+
+  <nav class="sidebar">
+        <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-3 sidebar">
+      <ul class="nav flex column">
+           <li class="nav-item"><a class = 'nav-link' href="{{url_for('modify_password')}}"> Bonjour {{ current_user.first_name }} {{ current_user.last_name }}</a></li>
+            <li class="nav-item"><a class = 'nav-link' href="{{url_for('login_page')}}">se déconnecter</a></li>
+
+         {% if not current_user.is_admin %}
+            <div class="wrapper" id="wrapper2">
+                    <li class="nav-item"><a class = 'nav-link' href="{{url_for('dashboard_student_page')}}">Accueil</a></li>
+                    <li class="nav-item"><a class = 'nav-link' href="{{url_for('board_page')}}">Mes candidatures</a></li>
+                    <li class="nav-item"><a class = 'nav-link' href="{{url_for('add_candidature')}}">Créer une nouvelle candidature</li>
+                    <li class="nav-item"><a class = 'nav-link' href="{{url_for('dashboard_student_page')}}">Annuaire de l'équipe Simplon</a></li>
+                </ul>
+            </div>
           {% else %}    
-          <li class="nav-item ml-3">
-            <a class="nav-link" href="{{ url_for('admin_board_page') }}">Board</a>
-          </li>   
-          <li class="nav-item ml-3">
-            <a class="nav-link" href="{{ url_for('account_generation') }}">Add user</a>
-          </li>
+            <div class="wrapper" id="wrapper2">
+                <ul class="nav flex-column">
+                    <li class ="nav-item"><a class="nav-link" href="{{ url_for('admin_board_page') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('account_generation') }}">Ajouter un apprenant</a></li>
+                </ul>
+            </div>
+             </div>
         {% endif %}
-      </ul>
-    </div>
-      <div class="col-3 text-right">
-        <span class="navbar-text">
-          Welcome, 
-          <a href="{{ url_for('modify_password') }}"> {{ current_user.first_name }} {{ current_user.last_name }}</a>
-        </span>
-        <span class="navbar-text">
-          <a class="nav-link" href="{{ url_for('logout_page') }}">Log out</a>
-        </span>
-      </div>
+
+
       {% endif %}
   </nav>
 
