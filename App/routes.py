@@ -236,114 +236,114 @@ import os
 #     return render_template("account_creation.html", form=form)
 
 
-# Boards
-@app.route("/board", methods=["GET", "POST"])
-@login_required
-def board_page():
-    """[Allow to generate the template of board.html on board path, if user is authenticated else return on login]
+# # Boards
+# @app.route("/board", methods=["GET", "POST"])
+# @login_required
+# def board_page():
+#     """[Allow to generate the template of board.html on board path, if user is authenticated else return on login]
 
-    Returns:
-        [str]: [board page code different if the user is admin or not]
-    """
-    return render_template(
-        "board.html", user_candidacy=Candidacy.user_to_json(current_user.id)
-    )  # Candidacy.find_by_user_id(current_user.id))
-
-
-@app.route("/admin_board", methods=["GET", "POST"])
-@login_required
-@admin_required
-def admin_board_page():
-    return render_template(
-        "admin_board.html", user_candidacy=Candidacy.all_candidacies_to_list()
-    )
+#     Returns:
+#         [str]: [board page code different if the user is admin or not]
+#     """
+#     return render_template(
+#         "board.html", user_candidacy=Candidacy.user_to_json(current_user.id)
+#     )  # Candidacy.find_by_user_id(current_user.id))
 
 
-# Candidacy
-@app.route("/candidature", methods=["GET", "POST"])
-@login_required
-def add_candidature():
-    """[Allow to generate the template of add_candidacy.html on candidacy path to add candidacy in the BDD if validate and redirect to the board page when finish]
-
-    Returns:
-        [str]: [Candidacy code page]
-    """
-    form = AddCandidacy()
-    if form.validate_on_submit():
-        print("ok pour wtform")
-        if form.radio.data == "1":
-            company = Company(
-                name=form.new_company_name.data,
-                sector=form.new_company_sector.data,
-                type=form.new_company_type.data,
-            )
-            company.save_to_db()  # should add a try and except on this in order to redirect if there is a problem
-            company_id = company.id
-        else:
-            company_id = form.company_id.data
-
-        contact_phone = None
-        if form.contact_phone.data != "":
-            contact_phone = form.contact_phone.data
-
-        Candidacy(
-            user_id=current_user.id,
-            company_id=company_id,  # form.company_id.get('data'),
-            location_id=form.location_id.data,
-            contact_full_name=form.contact_full_name.data,
-            contact_email=form.contact_email.data,
-            contact_phone=contact_phone,
-            job_title=form.job_title.data,
-            contact_link=form.contact_link.data,
-            date=form.date.data,
-        ).save_to_db()
-        flash("Nouvelle Candidature ajouté ", category="success")
-        return redirect(url_for("board_page"))
-    return render_template("add_candidacy.html", form=form)
+# @app.route("/admin_board", methods=["GET", "POST"])
+# @login_required
+# @admin_required
+# def admin_board_page():
+#     return render_template(
+#         "admin_board.html", user_candidacy=Candidacy.all_candidacies_to_list()
+#     )
 
 
-@app.route("/update/<int:id>", methods=["GET", "POST"])
-@login_required
-def modify_candidacy(id):
-    """[Allow to generate the template of modify_candidacy.html on modify_candidacy path to modify candidacy in the BDD if validate and redirect to the board page when finish]
+# # Candidacy
+# @app.route("/candidature", methods=["GET", "POST"])
+# @login_required
+# def add_candidature():
+#     """[Allow to generate the template of add_candidacy.html on candidacy path to add candidacy in the BDD if validate and redirect to the board page when finish]
 
-    Returns:
-        [str]: [modify candidacy code page]
-    """
-    candidacy = Candidacy.query.get_or_404(id)
-    candidacy_js = candidacy.json()
-    form = ModifyCandidacy(**candidacy_js)
+#     Returns:
+#         [str]: [Candidacy code page]
+#     """
+#     form = AddCandidacy()
+#     if form.validate_on_submit():
+#         print("ok pour wtform")
+#         if form.radio.data == "1":
+#             company = Company(
+#                 name=form.new_company_name.data,
+#                 sector=form.new_company_sector.data,
+#                 type=form.new_company_type.data,
+#             )
+#             company.save_to_db()  # should add a try and except on this in order to redirect if there is a problem
+#             company_id = company.id
+#         else:
+#             company_id = form.company_id.data
 
-    if form.validate_on_submit():
-        candidacy.company_id = form.company_id.data
-        candidacy.contact_full_name = form.contact_full_name.data
-        candidacy.contact_email = form.contact_email.data
-        if form.contact_phone.data == "":
-            candidacy.contact_phone = None
-        else:
-            candidacy.contact_phone = form.contact_phone.data
-        candidacy.job_title = form.job_title.data
-        candidacy.contact_link = form.contact_link.data
-        candidacy.status = form.status.data
-        candidacy.date = form.date.data  # .strftime("%Y-%m-%d")
+#         contact_phone = None
+#         if form.contact_phone.data != "":
+#             contact_phone = form.contact_phone.data
 
-        try:
-            candidacy.save_to_db()
-            return redirect(url_for("board_page"))
-        except:
-            flash("Something goes wrong", category="danger")
-
-    return render_template(
-        "modify_candidacy.html", form=form, candidacy=candidacy.json()
-    )
+#         Candidacy(
+#             user_id=current_user.id,
+#             company_id=company_id,  # form.company_id.get('data'),
+#             location_id=form.location_id.data,
+#             contact_full_name=form.contact_full_name.data,
+#             contact_email=form.contact_email.data,
+#             contact_phone=contact_phone,
+#             job_title=form.job_title.data,
+#             contact_link=form.contact_link.data,
+#             date=form.date.data,
+#         ).save_to_db()
+#         flash("Nouvelle Candidature ajouté ", category="success")
+#         return redirect(url_for("board_page"))
+#     return render_template("add_candidacy.html", form=form)
 
 
-@app.route("/delete_candidacy")
-@login_required
-def delete_candidacy():
-    """[Allow to delete candidacy in the BDD with the id and redirect to board page]"""
+# @app.route("/update/<int:id>", methods=["GET", "POST"])
+# @login_required
+# def modify_candidacy(id):
+#     """[Allow to generate the template of modify_candidacy.html on modify_candidacy path to modify candidacy in the BDD if validate and redirect to the board page when finish]
 
-    candidacy_id = request.args.get("id")
-    Candidacy.query.filter_by(id=candidacy_id).first().delete_from_db()
-    flash("Candidature supprimé avec succés", category="success")
-    return redirect(url_for("board_page"))
+#     Returns:
+#         [str]: [modify candidacy code page]
+#     """
+#     candidacy = Candidacy.query.get_or_404(id)
+#     candidacy_js = candidacy.json()
+#     form = ModifyCandidacy(**candidacy_js)
+
+#     if form.validate_on_submit():
+#         candidacy.company_id = form.company_id.data
+#         candidacy.contact_full_name = form.contact_full_name.data
+#         candidacy.contact_email = form.contact_email.data
+#         if form.contact_phone.data == "":
+#             candidacy.contact_phone = None
+#         else:
+#             candidacy.contact_phone = form.contact_phone.data
+#         candidacy.job_title = form.job_title.data
+#         candidacy.contact_link = form.contact_link.data
+#         candidacy.status = form.status.data
+#         candidacy.date = form.date.data  # .strftime("%Y-%m-%d")
+
+#         try:
+#             candidacy.save_to_db()
+#             return redirect(url_for("board_page"))
+#         except:
+#             flash("Something goes wrong", category="danger")
+
+#     return render_template(
+#         "modify_candidacy.html", form=form, candidacy=candidacy.json()
+#     )
+
+
+# @app.route("/delete_candidacy")
+# @login_required
+# def delete_candidacy():
+#     """[Allow to delete candidacy in the BDD with the id and redirect to board page]"""
+
+#     candidacy_id = request.args.get("id")
+#     Candidacy.query.filter_by(id=candidacy_id).first().delete_from_db()
+#     flash("Candidature supprimé avec succés", category="success")
+#     return redirect(url_for("board_page"))
