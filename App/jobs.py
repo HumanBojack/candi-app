@@ -5,6 +5,7 @@ from flask_apscheduler import APScheduler
 from flask import render_template
 from flask_mail import Message
 from datetime import datetime, timedelta
+import os
 
 
 def weekly_mail_to_users():
@@ -27,7 +28,7 @@ def weekly_mail_to_users():
 
             msg = Message(
                 "Tu devrais relancer ces entreprises.",
-                sender="candi.app.mailer@gmail.com",
+                sender=os.getenv("MAILER_ADRESSE"),
                 recipients=[user.email],
             )  # mail could be an environnement variable
 

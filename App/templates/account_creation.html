@@ -1,51 +1,51 @@
 {% extends 'base.html' %}
 
-{% block title %} 
-    Modifier mot de passe
+{% block title %}
+Modifier mot de passe
 {% endblock %}
 
 {% block content %}
 {% if form.password.errors %}
-    {% for error in form.password.errors %}
-        <div class="alert alert-warning alert-dismissible">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> {{ error }}
-        </div>
-    {% endfor %}
+{% for error in form.password.errors %}
+<div class="alert alert-warning alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Error!</strong> {{ error }}
+</div>
+{% endfor %}
 {% endif %}
 {% if form.phone.errors %}
-    {% for error in form.phone.errors %}
-        <div class="alert alert-warning alert-dismissible">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Error!</strong> {{ error }}
-        </div>
-    {% endfor %}
+{% for error in form.phone.errors %}
+<div class="alert alert-warning alert-dismissible">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Error!</strong> {{ error }}
+</div>
+{% endfor %}
 {% endif %}
-    <div class='container mt-5'>
-        <h1 class="text-center"> Modifier mot de passe </h1>
-        <br>
-        <form method="POST" class="form-register">
-            {{ form.hidden_tag() }}
+<div class='container mt-5'>
+    <h1 class="text-center"> Modifier mot de passe </h1>
+    <br>
+    <form method="POST" class="form-register">
+        {{ form.hidden_tag() }}
 
-            {{ form.first_name.label() }}
-            {{ form.first_name(placeholder="Jhon", class="form-control") }}
-            <br>
-            {{ form.last_name.label() }}
-            {{ form.last_name(placeholder="Doe", class="form-control") }}
-            <br>
-            {{ form.phone.label() }}
-            <div class="input-group flex-nowrap">
-                <span class="input-group-text" id="addon-wrapping">+33</span>
-                {{ form.phone(size=32, class="form-control") }}
-            </div>
-            <br>
-            {{ form.password.label() }}
-            {{ form.password(placeholder="***********", class="form-control") }}
-            <br>
-            {{ form.verify_password.label() }}
-            {{ form.verify_password(placeholder="***********", class="form-control") }}
-            <br>
-            {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
-        </form>
-    </div>  
+        {{ form.first_name.label() }}
+        {{ form.first_name(placeholder="Jhon", class="form-control") }}
+        <br>
+        {{ form.last_name.label() }}
+        {{ form.last_name(placeholder="Doe", class="form-control") }}
+        <br>
+        {{ form.phone.label() }}
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping">+33</span>
+            {{ form.phone(size=32, class="form-control") }}
+        </div>
+        <br>
+        {{ form.password.label() }}
+        {{ form.password(class="form-control") }}
+        <br>
+        {{ form.verify_password.label() }}
+        {{ form.verify_password(class="form-control") }}
+        <br>
+        {{ form.submit(class="btn btn-lg btn-primary d-block", id="button")}}
+    </form>
+</div>
 {% endblock %}
