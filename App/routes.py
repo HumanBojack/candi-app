@@ -248,6 +248,9 @@ def modify_candidacy(id):
         [str]: [modify candidacy code page]
     """
     candidacy = Candidacy.query.get_or_404(id)
+    if current_user.id != candidacy.user_id:
+        flash("Vous ne pouvez pas accéder à cette candidature", category="danger")
+        return redirect(url_for("home_page"))
     candidacy_js = candidacy.json()
     form = ModifyCandidacy(**candidacy_js)
 
@@ -282,7 +285,7 @@ def delete_candidacy():
 
     candidacy_id = request.args.get("id")
     Candidacy.query.filter_by(id=candidacy_id).first().delete_from_db()
-    flash("Candidature supprimé avec succés", category="success")
+    flash("Candidature supprimée avec succès", category="success")
     return redirect(url_for("board_page"))
 
 
