@@ -24,9 +24,13 @@ import string
 import os
 
 # from App.routes.account import Account
-# from App.routes.auth import Auth
-# from App.routes.boards import Board, Admin_board
+from App.routes.auth import LoginPage, LogoutPage
+from App.routes.boards import Board
+
 # from App.routes.candidacies import Candidacies
 from App.routes.statics import Home
 
 api.add_resource(Home, "/")
+api.add_resource(Board, "/board")
+api.add_resource(LoginPage, "/login")
+api.add_resource(LogoutPage, "/logout")

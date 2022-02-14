@@ -32,9 +32,8 @@ class LoginPage(Resource):
         [str]: [login page code]
     """
 
-    form = Login()
-
     def get(self):
+        self.form = Login()
         if self.form.validate_on_submit():
             self.post()
         return render_template("login.html", form=self.form)
